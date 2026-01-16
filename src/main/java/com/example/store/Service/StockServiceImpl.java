@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StockServiceImpl implements  StockService {
@@ -29,5 +30,10 @@ public class StockServiceImpl implements  StockService {
     @Override
     public void deleteStockById(Long stockId){
         stockRepository.deleteById(stockId);
+    }
+
+    @Override
+    public Optional<Stock> findStockById(Long stock_id){
+        return stockRepository.findById(stock_id);
     }
 }

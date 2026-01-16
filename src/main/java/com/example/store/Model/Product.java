@@ -13,7 +13,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private Long product_id;
 
     @NotNull
     @Size(max=100)
@@ -30,25 +30,25 @@ public class Product {
 
 
     @ManyToOne
-    @JoinColumn(name = "categoryId")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToOne
-    @JoinColumn(name= "placeId")
+    @JoinColumn(name= "place_id")
     private  Place place;
 
     @ManyToOne
-    @JoinColumn(name = "stockId")
+    @JoinColumn(name = "stock_id")
     private  Stock stock;
 
 
     public Product(){}
-    public Long getProductId() {
-        return productId;
+    public Long getProduct_id() {
+        return product_id;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct_id(Long product_id) {
+        this.product_id = product_id;
     }
 
     public String getCode() {

@@ -10,7 +10,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long category_id;
 
     @NotNull
     @Column(name = "name")
@@ -20,11 +20,11 @@ public class Category {
 
 
     public Long getId() {
-        return categoryId;
+        return category_id;
     }
 
     public void setId(Long id) {
-        this.categoryId = id;
+        this.category_id = id;
     }
 
     public String getName() {

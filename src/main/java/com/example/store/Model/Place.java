@@ -10,19 +10,19 @@ public class Place {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long placeId;
+    private Long place_id;
 
     @NotNull
     @Column(name= "name")
     private String name;
 
     public Place(){}
-    public Long getPlaceId() {
-        return placeId;
+    public Long getPlace_id() {
+        return place_id;
     }
 
-    public void setPlaceId(Long placeId) {
-        this.placeId = placeId;
+    public void setPlace_id(Long place_id) {
+        this.place_id = place_id;
     }
 
     public String getName() {
