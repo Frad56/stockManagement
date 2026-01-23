@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -30,7 +31,9 @@ public class ProductServiceImpl implements ProductService {
     //delete
     @Override
     public void deleteProductById(Long productId){
+        if(productRepository.existsById(productId)){
         productRepository.deleteById(productId);
+        }
     }
     //Update
   /*  @Override
@@ -40,6 +43,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
    */
+
+    //search
+    @Override
+    public Optional<Product> findProductById(Long productId){
+        return productRepository.findById(productId);
+    }
 
 
 
