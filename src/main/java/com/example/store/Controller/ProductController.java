@@ -6,42 +6,40 @@ import com.example.store.Model.Category;
 import com.example.store.Model.Place;
 import com.example.store.Model.Product;
 import com.example.store.Model.Stock;
-import com.example.store.Service.CategoryServiceImpl;
-import com.example.store.Service.PlaceServiceImpl;
-import com.example.store.Service.ProductServiceImpl;
-import com.example.store.Service.StockServiceImpl;
+import com.example.store.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ProductController {
 
 
-    private ProductServiceImpl productServiceImpl;
-    private CategoryServiceImpl categoryServiceImpl;
-    private StockServiceImpl stockServiceImpl;
-    private PlaceServiceImpl placeServiceImpl;
+    private ProductService productService;
+    private CategoryService categoryService;
+    private StockService stockService;
+    private PlaceService placeService;
 
 
     @Autowired
-    public ProductController(ProductServiceImpl productServiceImpl,
-                             CategoryServiceImpl categoryServiceImp,
-                             StockServiceImpl stockServiceImpl,
-                             PlaceServiceImpl placeServiceImpl){
-        this.productServiceImpl=productServiceImpl;
-        this.categoryServiceImpl =categoryServiceImp;
-        this.stockServiceImpl=stockServiceImpl;
-        this.placeServiceImpl=placeServiceImpl;
+    public ProductController(ProductService productService,
+                             CategoryService categoryService,
+                             StockService stockService,
+                             PlaceService placeService){
+        this.productService =productService;
+        this.categoryService = categoryService;
+        this.stockService = stockService;
+        this.placeService = placeService;
     }
 
     @PostMapping("/products")
     public Product saveProduct(@Valid @RequestBody ProductDTO dto) {
-        Category category = categoryServiceImpl.findCategoryById(dto.getCategory_id()).orElseThrow();
-        Place place = placeServiceImpl.findPlaceById(dto.getPlace_id()).orElseThrow();
-        Stock stock = stockServiceImpl.findStockById(dto.getStock_id()).orElseThrow();
+        Category category = categoryService.findCategoryById(dto.getCategory_id()).orElseThrow();
+        Place place = placeService.findPlaceById(dto.getPlace_id()).orElseThrow();
+        Stock stock = stockService.findStockById(dto.getStock_id()).orElseThrow();
 
             Product product = new Product();
             product.setCode(dto.getCode());
@@ -51,17 +49,22 @@ public class ProductController {
             product.setPlace(place);
             product.setStock(stock);
 
-       return productServiceImpl.saveProduct(product);
+       return productService.saveProduct(product);
     }
 
     @GetMapping("/products")
     public List<Product> fetchProductList(){
-        return  productServiceImpl.fetchProductList();
+        return  productService.fetchProductList();
+    }
+
+    @GetMapping("/products/find/{id}")
+    public Optional<Product> findProductById(@PathVariable("id") Long productId){
+        return productService.findProductById(productId);
     }
 
     @DeleteMapping("/products/{id}")
     public String deleteProductByID(@PathVariable("id") Long productId){
-        productServiceImpl.deleteProductById(productId);
+        productService.deleteProductById(productId);
         return "Deleted Successfully";
     }
 

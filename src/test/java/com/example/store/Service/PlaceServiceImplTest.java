@@ -10,11 +10,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -67,13 +67,50 @@ class PlaceServiceImplTest {
 
     @Test
     void savePlace() {
-    }
+        Place input_place = new Place();
+        input_place.setName("A002");
 
-    @Test
-    void deletePlaceById() {
+        Place saved_place = new Place();
+        saved_place.setName("A002");
+        when(placeRepository.save(any(Place.class))).thenReturn(saved_place);
+
+        Place result = placeService.savePlace(input_place);
+        assertNotNull(result);
+
+        assertEquals("A002",result.getName());
+
+        verify(placeRepository).save(input_place);
+
     }
 
     @Test
     void findPlaceById() {
+        Place mock_place = new Place();
+        mock_place.setName("A002");
+
+        Long id_mock_place = mock_place.getPlace_id();
+        when(placeRepository.findById(id_mock_place)).thenReturn(java.util.Optional.of(mock_place));
+
+        Optional<Place> result = placeService.findPlaceById(id_mock_place);
+        assertEquals(id_mock_place,result.get().getPlace_id());
+
+
     }
+
+
+    @Test
+    void deletePlaceById() {
+        Place mock_Place = new Place();
+        Long id_mock_place = mock_Place.getPlace_id();
+
+        when(placeRepository.existsById(id_mock_place)).thenReturn(true);
+        doNothing().when(placeRepository).deleteById(id_mock_place);
+
+        placeService.deletePlaceById(id_mock_place);
+
+        verify(placeRepository).deleteById(id_mock_place);
+
+    }
+
+
 }

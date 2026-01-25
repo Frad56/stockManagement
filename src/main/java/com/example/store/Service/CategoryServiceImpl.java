@@ -24,13 +24,16 @@ public class CategoryServiceImpl implements CategoryService{
     //Read
     @Override
     public List<Category> fetchCategoryList(){
-        return (List<Category>) categoryRepository.findAll();
+        return categoryRepository.findAll();
     }
 
     //delete
     @Override
     public void deleteCategoryByID(Long categoryId){
-        categoryRepository.deleteById(categoryId);
+        if(categoryRepository.existsById(categoryId)){
+            categoryRepository.deleteById(categoryId);
+        }
+
     }
 
     //Search

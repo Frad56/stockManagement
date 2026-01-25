@@ -24,12 +24,15 @@ public class StockServiceImpl implements  StockService {
     //Read
     @Override
     public List<Stock> fetchStockList(){
-        return (List<Stock>) stockRepository.findAll();
+        return stockRepository.findAll();
     }
 
     @Override
     public void deleteStockById(Long stockId){
-        stockRepository.deleteById(stockId);
+        if(stockRepository.existsById(stockId)){
+            stockRepository.deleteById(stockId);
+        }
+
     }
 
     @Override

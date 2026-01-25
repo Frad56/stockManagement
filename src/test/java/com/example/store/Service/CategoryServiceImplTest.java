@@ -10,12 +10,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceImplTest {
@@ -65,17 +64,48 @@ class CategoryServiceImplTest {
     @Test
     void saveCategory() {
 
-        Category inputCategory = new Category();
-        inputCategory.setName("electronique");
+        Category input_Category = new Category();
+        input_Category.setName("electronique");
+
+        Category saved_Category =  new Category();
+        input_Category.setName("electronique");
+
+        when(categoryRepository.save(any(Category.class))).thenReturn(saved_Category);
+
+        Category result = categoryService.saveCategory(input_Category);
+        assertNotNull(result);
+
+        verify(categoryRepository).save(input_Category);
 
 
     }
 
     @Test
     void deleteCategoryByID() {
+        Category mock_category = new Category();
+        Long category_id = mock_category.getId();
+
+        when(categoryRepository.existsById(category_id)).thenReturn(true);
+        doNothing().when(categoryRepository).deleteById(category_id);
+
+        categoryService.deleteCategoryByID(category_id);
+
+        verify(categoryRepository).deleteById(category_id);
+
+
     }
 
     @Test
     void findCategoryById() {
+        Category mock_Category = new Category();
+
+        Long mock_category_id = mock_Category.getId();
+        when(categoryRepository.findById(mock_category_id)).thenReturn(java.util.Optional.of(mock_Category));
+
+        Optional<Category> foundCategory = categoryService.findCategoryById(mock_category_id);
+
+        assertEquals(foundCategory.get().getId(),mock_category_id);
     }
+
+
 }

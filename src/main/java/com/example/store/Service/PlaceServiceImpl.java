@@ -1,7 +1,6 @@
 package com.example.store.Service;
 
 import com.example.store.Model.Place;
-import com.example.store.Model.Product;
 import com.example.store.Repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,13 +23,16 @@ public class PlaceServiceImpl implements  PlaceService{
     //Read
     @Override
     public List<Place> fetchPlaceList(){
-        return  (List<Place>) placeRepository.findAll();
+        return  placeRepository.findAll();
     }
 
     //delete
     @Override
     public void deletePlaceById(Long placeId){
-        placeRepository.deleteById(placeId);
+        if (placeRepository.existsById(placeId)){
+            placeRepository.deleteById(placeId);
+        }
+
     }
 
     @Override
