@@ -139,6 +139,14 @@ class ProductControllerTest {
         mockMvc.perform(get("/products").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()",is(2)))
+                .andExpect(jsonPath("$[0].name").value(product_1.getName()))
+                .andExpect(jsonPath("$[1].name").value(product2.getName()))
+                .andExpect(jsonPath("$[0].code").value(product_1.getCode()))
+                .andExpect(jsonPath("$[1].code").value(product2.getCode()))
+                .andExpect(jsonPath("$[0].unityPrice").value(product_1.getUnityPrice()))
+                .andExpect(jsonPath("$[1].unityPrice").value(product2.getUnityPrice()))
+                .andExpect(jsonPath("$[0].category.name").value(product_1.getCategory().getName()))
+                .andExpect(jsonPath("$.[1].category.name").value(product2.getCategory().getName()))
                 .andDo(print());
 
 
@@ -180,7 +188,7 @@ class ProductControllerTest {
         SavedProduct.setStock(stock);
         SavedProduct.setName(productDTO.getName());
 
-       when(categoryService.findCategoryById(1L)).thenReturn(Optional.of(category));
+       when(categoryService.findCategoryById(1L)).thenReturn(category);
        when(placeService.findPlaceById(1L)).thenReturn(Optional.of(place));
        when(stockService.findStockById(1L)).thenReturn(Optional.of(stock));
 

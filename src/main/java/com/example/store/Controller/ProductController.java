@@ -37,7 +37,7 @@ public class ProductController {
 
     @PostMapping("/products")
     public Product saveProduct(@Valid @RequestBody ProductDTO dto) {
-        Category category = categoryService.findCategoryById(dto.getCategory_id()).orElseThrow();
+        Category category = categoryService.findCategoryById(dto.getCategory_id());
         Place place = placeService.findPlaceById(dto.getPlace_id()).orElseThrow();
         Stock stock = stockService.findStockById(dto.getStock_id()).orElseThrow();
 

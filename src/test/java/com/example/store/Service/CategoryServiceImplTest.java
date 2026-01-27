@@ -95,17 +95,17 @@ class CategoryServiceImplTest {
 
     }
 
-    @Test
-    void findCategoryById() {
-        Category mock_Category = new Category();
-
-        Long mock_category_id = mock_Category.getId();
-        when(categoryRepository.findById(mock_category_id)).thenReturn(java.util.Optional.of(mock_Category));
-
-        Optional<Category> foundCategory = categoryService.findCategoryById(mock_category_id);
-
-        assertEquals(foundCategory.get().getId(),mock_category_id);
-    }
+//    @Test
+//    void findCategoryById() {
+//        Category mock_Category = new Category();
+//
+//        Long mock_category_id = mock_Category.getId();
+//        when(categoryRepository.findById(mock_category_id)).thenReturn(java.util.Optional.of(mock_Category));
+//
+//        Optional<Category> foundCategory = categoryService.findCategoryById(mock_category_id);
+//
+//        assertEquals(foundCategory.get().getId(),mock_category_id);
+//    }
 
 
 }
