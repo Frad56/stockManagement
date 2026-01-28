@@ -28,6 +28,6 @@ public class StockController {
     @DeleteMapping("/stocks/{id}")
     public String deleteStockById(@PathVariable("id") Long stockId){
         stockService.deleteStockById(stockId);
-        return "Deleted Sucessfully";
+        return "Deleted Successfully";
     }
 }
