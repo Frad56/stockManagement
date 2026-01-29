@@ -74,7 +74,7 @@ class ProductControllerTest {
         mock_product.setStock(stock);
 
 
-        given(productService.findProductById(productId)).willReturn(Optional.of(mock_product));
+        given(productService.findProductById(productId)).willReturn(mock_product);
 
          mockMvc.perform(get("/products/find/{id}",productId)
               .contentType(MediaType.APPLICATION_JSON))
@@ -189,8 +189,8 @@ class ProductControllerTest {
         SavedProduct.setName(productDTO.getName());
 
        when(categoryService.findCategoryById(1L)).thenReturn(category);
-       when(placeService.findPlaceById(1L)).thenReturn(Optional.of(place));
-       when(stockService.findStockById(1L)).thenReturn(Optional.of(stock));
+       when(placeService.findPlaceById(1L)).thenReturn(place);
+       when(stockService.findStockById(1L)).thenReturn(stock);
 
        when(productService.saveProduct(any(Product.class))).thenReturn(SavedProduct);
 

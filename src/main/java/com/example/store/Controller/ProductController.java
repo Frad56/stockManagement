@@ -8,6 +8,7 @@ import com.example.store.Model.Product;
 import com.example.store.Model.Stock;
 import com.example.store.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -18,10 +19,10 @@ import java.util.Optional;
 public class ProductController {
 
 
-    private ProductService productService;
-    private CategoryService categoryService;
-    private StockService stockService;
-    private PlaceService placeService;
+    private final ProductService productService;
+    private final CategoryService categoryService;
+    private final StockService stockService;
+    private  final PlaceService placeService;
 
 
     @Autowired
@@ -36,10 +37,10 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product saveProduct(@Valid @RequestBody ProductDTO dto) {
+    public ResponseEntity<Product> saveProduct(@Valid @RequestBody ProductDTO dto) {
         Category category = categoryService.findCategoryById(dto.getCategory_id());
-        Place place = placeService.findPlaceById(dto.getPlace_id()).orElseThrow();
-        Stock stock = stockService.findStockById(dto.getStock_id()).orElseThrow();
+        Place place = placeService.findPlaceById(dto.getPlace_id());
+        Stock stock = stockService.findStockById(dto.getStock_id());
 
             Product product = new Product();
             product.setCode(dto.getCode());
@@ -48,24 +49,26 @@ public class ProductController {
             product.setCategory(category);
             product.setPlace(place);
             product.setStock(stock);
-
-       return productService.saveProduct(product);
+        Product return_product = productService.saveProduct(product);
+       return ResponseEntity.ok(return_product);
     }
 
     @GetMapping("/products")
-    public List<Product> fetchProductList(){
-        return  productService.fetchProductList();
+    public ResponseEntity< List<Product> >fetchProductList(){
+        List<Product> products =productService.fetchProductList();;
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/products/find/{id}")
-    public Optional<Product> findProductById(@PathVariable("id") Long productId){
-        return productService.findProductById(productId);
+    public ResponseEntity<Product> findProductById(@PathVariable("id") Long productId){
+        Product product =  productService.findProductById(productId);
+        return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/products/{id}")
-    public String deleteProductByID(@PathVariable("id") Long productId){
+    public ResponseEntity<String> deleteProductByID(@PathVariable("id") Long productId){
         productService.deleteProductById(productId);
-        return "Deleted Successfully";
+        return ResponseEntity.ok("Deleted Successfully");
     }
 
 }

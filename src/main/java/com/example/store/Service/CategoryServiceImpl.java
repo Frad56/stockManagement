@@ -1,7 +1,7 @@
 package com.example.store.Service;
 
 
-import com.example.store.Exception.CategoryNotFoundException;
+import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.Category;
 import com.example.store.Repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,13 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
+
+    private CategoryRepository categoryRepository;
+
     @Autowired
-    CategoryRepository categoryRepository;
+    public CategoryServiceImpl(CategoryRepository categoryRepository){
+        this.categoryRepository =categoryRepository;
+    }
 
     //add
     @Override
@@ -30,18 +35,17 @@ public class CategoryServiceImpl implements CategoryService{
     //delete
     @Override
     public void deleteCategoryByID(Long categoryId){
-        if(categoryRepository.existsById(categoryId)){
-            categoryRepository.deleteById(categoryId);
+        if(!categoryRepository.existsById(categoryId)){
+            throw new ElementNotFoundException(categoryId);
         }
-
+        categoryRepository.deleteById(categoryId);
     }
 
     //Search
-
     @Override
     public Category findCategoryById(Long categoryId){
         return  categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+                .orElseThrow(() -> new ElementNotFoundException(categoryId));
     }
 }
 

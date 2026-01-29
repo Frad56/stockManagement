@@ -1,20 +1,24 @@
 package com.example.store.Service;
 
 
+import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.Product;
 import com.example.store.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductServiceImpl(ProductRepository productRepository){
+        this.productRepository=productRepository;
+    }
 
     //Add
     @Override
@@ -31,9 +35,10 @@ public class ProductServiceImpl implements ProductService {
     //delete
     @Override
     public void deleteProductById(Long productId){
-        if(productRepository.existsById(productId)){
-        productRepository.deleteById(productId);
+        if(!productRepository.existsById(productId)){
+            throw new ElementNotFoundException(productId);
         }
+        productRepository.deleteById(productId);
     }
     //Update
   /*  @Override
@@ -46,8 +51,8 @@ public class ProductServiceImpl implements ProductService {
 
     //search
     @Override
-    public Optional<Product> findProductById(Long productId){
-        return productRepository.findById(productId);
+    public Product findProductById(Long productId){
+        return productRepository.findById(productId).orElseThrow(() -> new ElementNotFoundException(productId));
     }
 
 

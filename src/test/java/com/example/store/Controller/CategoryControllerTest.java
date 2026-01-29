@@ -40,7 +40,7 @@ class CategoryControllerTest {
         category.setName("C001");
         when(categoryService.saveCategory(any(Category.class))).thenReturn(category);
 
-        mockMvc.perform(post("/categorys").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(category)))
                 .andExpect(status().isOk());
 
@@ -57,7 +57,7 @@ class CategoryControllerTest {
 
         List<Category> mockCategoryList = Arrays.asList(category_1,category_2);
         when(categoryService.fetchCategoryList()).thenReturn(mockCategoryList);
-        mockMvc.perform(get("/categorys").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/category").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()",is(2)))
                 .andExpect(jsonPath("$[0].name").value(category_1.getName()))

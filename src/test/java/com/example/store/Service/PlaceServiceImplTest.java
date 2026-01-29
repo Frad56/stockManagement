@@ -1,5 +1,6 @@
 package com.example.store.Service;
 
+import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.Place;
 import com.example.store.Repository.PlaceRepository;
 import org.junit.jupiter.api.Test;
@@ -91,24 +92,32 @@ class PlaceServiceImplTest {
         Long id_mock_place = mock_place.getPlace_id();
         when(placeRepository.findById(id_mock_place)).thenReturn(java.util.Optional.of(mock_place));
 
-        Optional<Place> result = placeService.findPlaceById(id_mock_place);
-        assertEquals(id_mock_place,result.get().getPlace_id());
+        Place result = placeService.findPlaceById(id_mock_place);
+        assertEquals(id_mock_place,result.getPlace_id());
 
 
     }
 
 
     @Test
-    void deletePlaceById() {
-        Place mock_Place = new Place();
-        Long id_mock_place = mock_Place.getPlace_id();
+    void deletePlaceById_WhenCategoryDoesNotExist_ShouldThrowException() {
+        Long id = 1L;
+        when(placeRepository.existsById(id)).thenReturn(false);
+        ElementNotFoundException exception = assertThrows(
+                ElementNotFoundException.class ,() ->placeService.deletePlaceById(id)
+        );
+    }
 
-        when(placeRepository.existsById(id_mock_place)).thenReturn(true);
-        doNothing().when(placeRepository).deleteById(id_mock_place);
+    @Test
+    void deletePlaceById_WhenCategoryExists_ShouldDeleteSuccessfully(){
+        Long id = 1L;
 
-        placeService.deletePlaceById(id_mock_place);
+        when(placeRepository.existsById(id)).thenReturn(true);
 
-        verify(placeRepository).deleteById(id_mock_place);
+        placeService.deletePlaceById(id);
+
+        verify(placeRepository).existsById(id);
+        verify(placeRepository).deleteById(id);
 
     }
 

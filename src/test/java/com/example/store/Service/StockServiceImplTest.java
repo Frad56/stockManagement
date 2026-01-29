@@ -1,5 +1,6 @@
 package com.example.store.Service;
 
+import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.Stock;
 import com.example.store.Repository.StockRepository;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +48,6 @@ class StockServiceImplTest {
         verify(stockRepository).findAll();
 
 
-
     }
 
     @Test
@@ -81,18 +80,6 @@ class StockServiceImplTest {
 
     }
 
-    @Test
-    void deleteStockById(){
-        Stock mock_Stock =new Stock();
-        Long mock_stock_id = mock_Stock.getStock_id();
-
-        when(stockRepository.existsById(mock_stock_id)).thenReturn(true);
-        doNothing().when(stockRepository).deleteById(mock_stock_id);
-
-        stockService.deleteStockById(mock_stock_id);
-
-        verify(stockRepository).deleteById(mock_stock_id);
-    }
 
     @Test
     void findStockById(){
@@ -100,9 +87,32 @@ class StockServiceImplTest {
         Long stock_id = mock_stock.getStock_id();
 
         when(stockRepository.findById(stock_id)).thenReturn(java.util.Optional.of(mock_stock));
-        Optional<Stock> foundStock = stockService.findStockById(stock_id);
+        Stock foundStock = stockService.findStockById(stock_id);
 
-        assertEquals(foundStock.get().getStock_id(),stock_id);
+        assertEquals(foundStock.getStock_id(),stock_id);
     }
+    @Test
+    void deleteStockById_WhenStockExists_ShouldDeleteSuccessfully(){
+        Long id = 1L;
+
+        when(stockRepository.existsById(id)).thenReturn(true);
+
+        stockService.deleteStockById(id);
+
+        verify(stockRepository).existsById(id);
+        verify(stockRepository).deleteById(id);
+
+    }
+    @Test
+    void deleteStockById_WhenStockDoesNotExist_ShouldThrowException(){
+        Long id = 1L;
+        when(stockRepository.existsById(id)).thenReturn(false);
+        ElementNotFoundException exception = assertThrows(
+                ElementNotFoundException.class ,() -> stockService.deleteStockById(id) );
+
+
+    }
+
+
 
 }

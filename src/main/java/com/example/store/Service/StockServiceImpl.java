@@ -1,19 +1,23 @@
 package com.example.store.Service;
 
 
+import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.Stock;
 import com.example.store.Repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StockServiceImpl implements  StockService {
 
-    @Autowired
     StockRepository stockRepository;
+
+    @Autowired
+    private StockServiceImpl(StockRepository stockRepository){
+        this.stockRepository =stockRepository;
+    }
 
     //add
     @Override
@@ -29,14 +33,14 @@ public class StockServiceImpl implements  StockService {
 
     @Override
     public void deleteStockById(Long stockId){
-        if(stockRepository.existsById(stockId)){
-            stockRepository.deleteById(stockId);
+        if(!stockRepository.existsById(stockId)){
+            throw  new ElementNotFoundException(stockId);
         }
-
+        stockRepository.deleteById(stockId);
     }
 
     @Override
-    public Optional<Stock> findStockById(Long stock_id){
-        return stockRepository.findById(stock_id);
+    public Stock findStockById(Long stock_id){
+        return stockRepository.findById(stock_id).orElseThrow(() -> new ElementNotFoundException(stock_id));
     }
 }

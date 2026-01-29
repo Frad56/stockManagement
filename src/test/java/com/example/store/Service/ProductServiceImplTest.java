@@ -1,5 +1,6 @@
 package com.example.store.Service;
 
+import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.Product;
 import com.example.store.Repository.CategoryRepository;
 import com.example.store.Repository.PlaceRepository;
@@ -13,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -100,7 +100,6 @@ class ProductServiceImplTest {
 
     @Test
     void findProductById(){
-
         Product mock_Product = new Product();
         mock_Product.setName("tel203");
 
@@ -108,21 +107,31 @@ class ProductServiceImplTest {
         when(productRepository.findById(productId)).thenReturn(java.util.Optional.of(mock_Product));
 
         //when
-        Optional<Product> foundProduct = productService.findProductById(productId);
+        Product foundProduct = productService.findProductById(productId);
 
-        assertEquals(productId,foundProduct.get().getProduct_id());
+        assertEquals(productId,foundProduct.getProduct_id());
     }
+
     @Test
-    void deleteProductById() {
-        Product mock_Product = new Product();
-        Long productId = mock_Product.getProduct_id();
-
-        //verifie que le produit existe et la suppression ne fait rien réel
-        when(productRepository.existsById(productId)).thenReturn(true);
-        doNothing().when(productRepository).deleteById(productId);
-
-        productService.deleteProductById(productId);
-
-        verify(productRepository).deleteById(productId);
+    void deleteProductById_WhenProductDoesNotExist_ShouldThrowException() {
+        Long id = 1L;
+        when(productRepository.existsById(id)).thenReturn(false);
+        ElementNotFoundException exception = assertThrows(
+                ElementNotFoundException.class ,() ->productService.deleteProductById(id)
+        );
     }
+
+    @Test
+    void deleteProductById_WhenProductExists_ShouldDeleteSuccessfully(){
+        Long id = 1L;
+
+        when(productRepository.existsById(id)).thenReturn(true);
+
+        productService.deleteProductById(id);
+
+        verify(productRepository).existsById(id);
+        verify(productRepository).deleteById(id);
+
+    }
+
 }

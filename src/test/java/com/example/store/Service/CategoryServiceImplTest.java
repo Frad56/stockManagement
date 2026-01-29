@@ -1,5 +1,6 @@
 package com.example.store.Service;
 
+import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.Category;
 import com.example.store.Repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,7 +45,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void whenSaveCategoryFaild_ShouldThrrowException(){
+    void whenSaveCategoryFailed_ShouldThrowException(){
         Category category_1 = new Category();
         category_1.setName("electronique");
 
@@ -81,31 +81,39 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void deleteCategoryByID() {
-        Category mock_category = new Category();
-        Long category_id = mock_category.getId();
+    void deleteCategoryById_WhenCategoryExists_ShouldDeleteSuccessfully(){
+        Long id = 1L;
 
-        when(categoryRepository.existsById(category_id)).thenReturn(true);
-        doNothing().when(categoryRepository).deleteById(category_id);
+        when(categoryRepository.existsById(id)).thenReturn(true);
 
-        categoryService.deleteCategoryByID(category_id);
+        categoryService.deleteCategoryByID(id);
 
-        verify(categoryRepository).deleteById(category_id);
+        verify(categoryRepository).existsById(id);
+        verify(categoryRepository).deleteById(id);
+
+    }
+
+    @Test
+    void deleteCategoryById_WhenCategoryDoesNotExist_ShouldThrowException(){
+        Long id = 1L;
+        when(categoryRepository.existsById(id)).thenReturn(false);
+        ElementNotFoundException exception = assertThrows(
+                ElementNotFoundException.class ,() -> categoryService.deleteCategoryByID(id) );
 
 
     }
 
-//    @Test
-//    void findCategoryById() {
-//        Category mock_Category = new Category();
-//
-//        Long mock_category_id = mock_Category.getId();
-//        when(categoryRepository.findById(mock_category_id)).thenReturn(java.util.Optional.of(mock_Category));
-//
-//        Optional<Category> foundCategory = categoryService.findCategoryById(mock_category_id);
-//
-//        assertEquals(foundCategory.get().getId(),mock_category_id);
-//    }
+
+    @Test
+    void findCategoryById() {
+        Category mock_Category = new Category();
+
+        Long mock_category_id = mock_Category.getId();
+        when(categoryRepository.findById(mock_category_id)).thenReturn(java.util.Optional.of(mock_Category));
+       Category foundCategory = categoryService.findCategoryById(mock_category_id);
+
+        assertEquals(foundCategory.getId(),mock_category_id);
+    }
 
 
 }
