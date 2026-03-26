@@ -8,5 +8,6 @@ import { CharacteristicCreateComponent } from "./pages/characteristic-create/cha
 export const CHARACTERISTIC_ROUTES:Routes=[
  {path:'characteristic-list', component: CharacteristicListComponent},
  {path:'add-characteristic', component: CharacteristicCreateComponent},
+ {path:'add-characteristic-with-productId/:id', component: CharacteristicCreateComponent},
  {path:'edit-characteristic/:id',component:CharacteristicEditComponent}
 ]

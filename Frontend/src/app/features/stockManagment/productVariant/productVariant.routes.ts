@@ -8,5 +8,6 @@ export const PRODUCT_VARIANT_ROUTES:Routes = [
     
     { path:'productVariant-list', component :ProductVariantListComponent},
     {path:'add-productVariant',component:ProductVariantCreateComponent},
+    {path:'add-productVariant-with-productVariantId/:id',component:ProductVariantCreateComponent},
     {path:'edit-productVariant/:id',component:ProductVariantEditComponent}
 ];

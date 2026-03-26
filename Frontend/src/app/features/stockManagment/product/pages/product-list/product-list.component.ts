@@ -61,4 +61,15 @@ export class ProductListComponent implements OnInit {
     this.router.navigate(['productUnitSale/add-productUnitSale-with-ProductId',id]);
   }
   
+  addProductVariant(id:number){
+    this.router.navigate(['productVariant/add-productVariant-with-productVariantId',id]);
+  }
+
+
+  addCharacteristic(id:number){
+    this.router.navigate(['characteristic/add-characteristic-with-productId',id]);
+
+  }
+  
+ 
 }

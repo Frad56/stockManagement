@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,10 @@ import { CharacteristicService } from '../../../../../core/services/stockManagme
 import { Location } from '@angular/common';
 import { CharacteristicTypeValue } from '../../../../../shared/models/enum/Characteristic-type-value';
 import { CharacteristicDTO } from '../../../../../shared/models/dto/stockManagmentDTO/Characteristic.dto';
+import { ActivatedRoute } from '@angular/router';
+import { ProductCharacteristic } from '../../../../../shared/models/StockManagment/ProductCharacteristic.model';
+import { ProductCharacteristicService } from '../../../../../core/services/stockManagment/productCharacteristicService/product-characteristic.service';
+import { ProductCharacteristicDTO } from '../../../../../shared/models/dto/stockManagmentDTO/ProductCharacteristic.dto';
 
 @Component({
   selector: 'app-characteristic-create',
@@ -26,10 +30,17 @@ import { CharacteristicDTO } from '../../../../../shared/models/dto/stockManagme
 })
 export class CharacteristicCreateComponent {
 
+  productId!:number;
+  characteristicId!:number;
+  private route = inject(ActivatedRoute);
+
   characteristicTypeValues = Object.values(CharacteristicTypeValue); 
   private formBuilder = inject(FormBuilder);
   private characteristicService = inject(CharacteristicService);
   private location = inject(Location);
+
+  private productCharacteristicService = inject(ProductCharacteristicService);
+
   characteristicForm = this.formBuilder.group({
     name:[''],
     type:['',Validators.required]
@@ -39,12 +50,28 @@ export class CharacteristicCreateComponent {
   private mapFormToCharacteristic():CharacteristicDTO{
     return this.characteristicForm.getRawValue() as unknown as CharacteristicDTO;
   }
+  
   onSubmit(){
     if(this.characteristicForm.invalid) return;
+
     const characteristicDTO = this.mapFormToCharacteristic();
     this.characteristicService.addCharacteristic(characteristicDTO).subscribe({
-      next:() =>{
-        console.log("data:",characteristicDTO)
+      next:(response) =>{
+        console.log("data:",characteristicDTO);
+        this.characteristicId = response.characteristicId;
+        console.log("Characteristic ID:", this.characteristicId);
+        const productCharacteristicDTO = this.mapFormToProductCharacteristic();
+        this.productCharacteristicService.addProductCharacteristic(productCharacteristicDTO).subscribe({
+          next:(response)=>{
+            console.log("********************")
+            console.log("ProductCharacteristic added!")
+            console.log("********************")
+            alert("greate")
+          },
+          error:(err)=>{
+            console.log('error createing ProductCharacteristic',err)
+          }
+        });
         this.characteristicForm.reset();
       },
       error:(err)=>{
@@ -52,6 +79,16 @@ export class CharacteristicCreateComponent {
       }
     })
   }
+
+  private mapFormToProductCharacteristic(): ProductCharacteristicDTO {
+    this.productId = Number(this.route.snapshot.paramMap.get('id'));
+    return {
+      productId: this.productId,
+      characteristicId: this.characteristicId,
+    };
+  }
+ 
+
 
   goBack(){
     this.location.back();

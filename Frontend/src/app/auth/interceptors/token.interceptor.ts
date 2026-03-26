@@ -20,10 +20,19 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   }
     return next(clonedReq).pipe(
       catchError((error) =>{
+
         if(error.status === 401){
-         // localStorage.removeItem('token');
-          //localStorage.removeItem('role');
-          //router.navigate(['/login']);
+          
+          const msg = error.error?.message || error.error;
+          if (msg === 'Token expired') {
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            router.navigate(['/login']);
+          } 
+          else if (msg === 'Invalid token') {
+            console.log('Token invalide ');
+          }
+            
         }
         return throwError (() => error);
       })

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +12,7 @@ import { Product } from '../../../../../shared/models/StockManagment/product.mod
 import { ProductService } from '../../../../../core/services/stockManagment/productService/product.service';
 import { ProductVariantDTO } from '../../../../../shared/models/dto/stockManagmentDTO/ProductVariant.dto';
 import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-variant-create',
@@ -35,6 +36,9 @@ export class ProductVariantCreateComponent implements OnInit {
   protected products$!:Observable<Product[]>;
   private location = inject(Location);
 
+  id!:number;
+  private route = inject(ActivatedRoute);
+
   productVariantForm= this.formBuilder.group({
     code:[''],
     specificPrice:[],
@@ -44,8 +48,13 @@ export class ProductVariantCreateComponent implements OnInit {
 
   ngOnInit(): void {
       this.products$ =this.productService.getProducts();
-
-  }
+      this.id = Number(this.route.snapshot.paramMap.get('id'));
+      if(this.id){
+        this.productVariantForm.patchValue({
+          productId:this.id
+        });
+      }
+    }
 
   private mapFormToProductVariant(): ProductVariantDTO {
     return this.productVariantForm.getRawValue() as unknown as ProductVariantDTO;
