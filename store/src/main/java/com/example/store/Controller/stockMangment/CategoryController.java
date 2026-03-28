@@ -59,4 +59,10 @@ public class CategoryController {
         return ResponseEntity.ok("Deleted Successfully");
     }
 
+    @GetMapping("/findCategoriesWithoutProducts")
+    public ResponseEntity<List<Category>> findCategoriesWithoutProducts(){
+        return ResponseEntity.ok(categoryService.findCategoriesWithoutProducts());
+    }
+
+
 }

@@ -18,18 +18,18 @@ export class AuthGuard implements CanActivate {
     return true;
   }
   */
- const token = this.auth.getToken();
- const role = localStorage.getItem('role');
+    const token = this.auth.getToken();
+    const role = localStorage.getItem('role');
 
- if(!token) {
-  this.router.navigate(['/login']);
-  return false;
- }
+    if(!token) {
+      this.router.navigate(['/login']);
+      return false;
+    }
 
- if(role !== 'ADMIN') {
-  this.router.navigate(['/login']);
-  return false;
- }
-return true;
+    if(role !== 'ADMIN') {
+      this.router.navigate(['/login']);
+      return false;
+    }
+  return true;
 }
 }

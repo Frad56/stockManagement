@@ -15,6 +15,9 @@ import { CategoryService } from '../../../../../core/services/stockManagment/cat
 import { Location } from '@angular/common';
 import { AisleService } from '../../../../../core/services/stockManagment/aisleService/aisle.service';
 import { Aisle } from '../../../../../shared/models/StockManagment/Aisle.model';
+import { MatIcon } from '@angular/material/icon';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormStateService } from '../../../../../core/services/form-state.service';
 
 @Component({
   selector: 'app-product-create',
@@ -25,18 +28,21 @@ import { Aisle } from '../../../../../shared/models/StockManagment/Aisle.model';
             MatInputModule,
             MatButtonModule,
             CommonModule,
-            MatCardModule],
+            MatCardModule,
+          MatIcon],
   templateUrl: './product-create.component.html',
   styleUrl: './product-create.component.css'
 })
 export class ProductCreateComponent implements OnInit{
 
+  private formStateService = inject(FormStateService);
   categorys!:Observable<Category[]>;
   aisles!:Observable<Aisle[]>;
   private productService  = inject(ProductService);
   private categoryService = inject(CategoryService);
   private location = inject(Location);
 
+  private router = inject(Router);
   private aisleService = inject(AisleService);
   fromBuilder= inject(FormBuilder);
   productForm = this.fromBuilder.group({
@@ -44,7 +50,7 @@ export class ProductCreateComponent implements OnInit{
     designation:[''],
     brand:[''],
     description: [''],
-    basePrice: ['',Validators.required],
+    basePrice: ['', [Validators.required, Validators.min(0)]],
     categoryId:['',Validators.required],
     aisleId:['',Validators.required]
   });
@@ -54,6 +60,12 @@ export class ProductCreateComponent implements OnInit{
     this.aisles =this.aisleService.getAisles();
     console.log( "###########")
     console.log( this.categorys)
+
+    const savedData = this.formStateService.getProductForm();
+
+    if(savedData){
+      this.productForm.patchValue(savedData);
+    }
   }
   private mapFormToProduct(): ProductDTO {
     return this.productForm.getRawValue() as unknown as ProductDTO;
@@ -67,6 +79,7 @@ export class ProductCreateComponent implements OnInit{
         console.log('Product Created successfully', response);
         alert('Product Created successfully');
         this.productForm.reset();
+        this.formStateService.clearProductForm(); 
       },
       error: (err) => {
         console.error('Error creating product', err);
@@ -82,7 +95,16 @@ export class ProductCreateComponent implements OnInit{
     });
   }
  
-
+//Categorys
+addCategory(){
+  this.formStateService.setProductForm(this.productForm.value);
+  this.router.navigate(['categorys/add-category']);
+ }
+  
+ addAisle(){
+   this.formStateService.setProductForm(this.productForm.value);
+  this.router.navigate(['aisle/add-aisle']);
+ }
 goBack(){
   this.location.back();
 }

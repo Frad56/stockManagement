@@ -31,7 +31,7 @@
         <mat-label>Unit</mat-label>
         <mat-select formControlName="unitId">
           <mat-option *ngFor="let unit of units$ | async"
-        [value]="unit.unitId">    {{ unit.symbol }}</mat-option>
+        [value]="unit.unitId">    {{ unit.name }}</mat-option>
         </mat-select>
     </mat-form-field>
 

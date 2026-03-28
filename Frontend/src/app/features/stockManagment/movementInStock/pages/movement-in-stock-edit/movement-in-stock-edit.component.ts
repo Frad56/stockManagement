@@ -49,7 +49,7 @@ movementInStockForm =this.formBuilder.group({
   movementInStockType:['',Validators.required],
   quantityInStock:[0],
   productVariantId:[0,Validators.required],
-  unitId:[0,Validators.required]
+  unitId:[null as number | null, Validators.required]
   
 })
 ngOnInit(): void {

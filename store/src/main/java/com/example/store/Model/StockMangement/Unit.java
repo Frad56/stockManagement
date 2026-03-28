@@ -23,13 +23,4 @@ public class Unit {
     @Enumerated(EnumType.STRING)
     private UnitName name;
 
-    @Column(name = "symbol")
-    private String symbol;
-
-    @Column(name = "date_of_creation", updatable = false)
-    private LocalDateTime dateOfCreation;
-
-    @Enumerated(EnumType.STRING)
-    private SizeType sizeType;
-
 }

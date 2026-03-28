@@ -19,7 +19,7 @@
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Parent</mat-label>
       <mat-select formControlName="parentId">
-        <mat-option *ngFor="let category of categorys | async"
+        <mat-option *ngFor="let category of parentCategories | async"
                     [value]="category.categoryId">
           {{ category.name }}
         </mat-option>

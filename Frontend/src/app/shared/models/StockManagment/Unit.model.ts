@@ -4,6 +4,5 @@ import { UnitName } from "../enum/UnitName";
 export class Unit{
     unitId!:number;
     name!:UnitName;
-    symbol!:string;
-    sizeType!:SizeType; 
+   
 }

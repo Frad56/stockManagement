@@ -16,11 +16,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private  final  EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService){
         this.userRepository =userRepository;
         this.passwordEncoder =passwordEncoder;
+        this.emailService =emailService;
     }
 
     public List<UserDTO> getAllUsers(){
@@ -54,6 +56,38 @@ public class UserService {
     public Boolean verifyUserExisting(String username){
         return userRepository.findByUsername(username).isPresent();
     }
+//
+//    public Boolean verifyCode(String code,String userCode){
+//        if(code == userCode){
+//            return true;
+//        }
+//        return  false;
+//    }
+//
+//    public String firstChange(String oldEmail,String newEmail,String newPassword) {
+//        User user= userRepository.findByUserEmail(oldEmail).orElseThrow();
+//        if(user.getRole()  == Role.ADMIN){
+//            return "NOT_ADMIN";
+//        }
+//        String code = emailService.generateCode();
+//
+//        emailService.sendEmail(newEmail,code,"Your code is: " + code);
+//
+//        user.setPassword(passwordEncoder.encode(newPassword));
+//        if(!user.isEmailChanged()){
+//            user.setEmail(newEmail);
+//            user.setEmailChanged(true);
+//        }else {
+//            return  "EMAIL_ALREADY_CHANGED";
+//        }
+//        user.setEmailChanged(false);
+//        userRepository.save(user);
+//        return  "UPDATED_SUCCESSFULLY";
+//
+//    }
+//
+
+
 
 
 

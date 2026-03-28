@@ -37,8 +37,7 @@ private unitService = inject(UnitService);
 
 unitForm = this.formBuilder.group({
   name: ['', Validators.required], 
-  symbol: ['', Validators.required],
-  sizeType: ['', Validators.required]
+ 
 });
 
 private mapFormToUnit() :UnitDTO{

@@ -36,5 +36,10 @@ export class CategoryService {
   leafCategoryList():Observable<Category[]>{
     return this.http.get<Category[]>(`${this.apiUrl}leafCategoryList`);
   }
+
+  findCategoriesWithoutProducts():Observable<Category[]>{
+    return this.http.get<Category[]>(`${this.apiUrl}findCategoriesWithoutProducts`);
+  }
+  
   
 }

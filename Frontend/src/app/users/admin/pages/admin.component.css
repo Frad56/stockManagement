@@ -32,3 +32,27 @@
   .content{
   padding:20px;
   }
+
+
+  .cog-square {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    font-size: 34px;
+    cursor: pointer;
+  }
+  
+  /* menu isolé */
+  .floating-menu {
+    position: fixed; /* indépendant */
+    bottom: 20px;
+    right: 60px; /*  espace entre bouton et menu */
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+  }

@@ -33,6 +33,8 @@ public class User  {
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
 
+    private boolean firstLogin = true;
+    private boolean emailChanged = false;
 
     public Long getId() {
         return id;
@@ -80,5 +82,21 @@ public class User  {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
+    }
+
+    public boolean isEmailChanged() {
+        return emailChanged;
+    }
+
+    public void setEmailChanged(boolean emailChanged) {
+        this.emailChanged = emailChanged;
     }
 }

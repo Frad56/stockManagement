@@ -55,8 +55,7 @@ ngOnInit(): void {
         
           this.unitForm.patchValue({
             name: String(unit.name),
-            symbol: unit.symbol,
-            sizeType:String( unit.sizeType)
+           
           });
         },
         error:(err)=>{

@@ -26,7 +26,7 @@ import { Category } from '../../../../../shared/models/StockManagment/Category.m
 })
 export class CategoryCreateComponent implements OnInit {
 
-  categorys!:Observable<Category[]>;
+  parentCategories!:Observable<Category[]>;
   
   private categoryService = inject(CategoryService);
   private location = inject (Location);
@@ -48,7 +48,7 @@ export class CategoryCreateComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.categorys = this.categoryService.getCategories();
+      this.parentCategories = this.categoryService.findCategoriesWithoutProducts();
   }
 
   onSubmit(){

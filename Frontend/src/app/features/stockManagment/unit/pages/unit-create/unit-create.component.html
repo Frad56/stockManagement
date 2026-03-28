@@ -13,18 +13,6 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Symbol</mat-label>
-        <input matInput type="text" formControlName="symbol" placeholder="symbol">
-      </mat-form-field>
-
-    <mat-form-field>
-        <mat-label>sizeType</mat-label>
-        <mat-select formControlName="sizeType">
-          <mat-option *ngFor="let sizeType of sizeTypes"
-          [value]="sizeType">    {{ sizeType }}</mat-option>
-        </mat-select>
-      </mat-form-field>
 
     <div class="button-group">
       <button mat-raised-button class="Create-button" color="primary" type="submit">

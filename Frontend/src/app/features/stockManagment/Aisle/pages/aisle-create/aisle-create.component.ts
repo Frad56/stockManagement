@@ -52,7 +52,7 @@ export class AisleCreateComponent {
       
         if (err.error?.message) {
           alert(err.error.message);   
-          alert('Erreur serveur lors création aisle');
+        
         }
         console.log("la response ",aisleDTO);
       }

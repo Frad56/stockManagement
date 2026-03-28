@@ -21,7 +21,9 @@ public interface CategoryService {
 
     boolean validateValue(String value, CharacteristicTypeValue typeValue);
 
-    Object convertValue(String value,CharacteristicTypeValue typeValue);
+   // Object convertValue(String value,CharacteristicTypeValue typeValue);
 
     List<Category> leafCategoryList();
+
+    List<Category> findCategoriesWithoutProducts();
 }

@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface AisleRepository  extends JpaRepository<Aisle, Long> {
 
 
+  Optional<Aisle> findByName(String name);
+
 
 }

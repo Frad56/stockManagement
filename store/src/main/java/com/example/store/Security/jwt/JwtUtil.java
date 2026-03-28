@@ -50,13 +50,8 @@ public class JwtUtil {
 
     }
 
-    public boolean validateJwtToken(String token){
-        try {
-            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
-            return true;
-        }catch (Exception e){
-            log.error("JWT validation error: {}",e.getMessage());
-        }
-        return false;
+    public void validateJwtToken(String token){
+        Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+
     }
 }

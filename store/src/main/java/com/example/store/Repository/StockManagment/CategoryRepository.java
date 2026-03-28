@@ -22,4 +22,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     """)
     List<Category> findLeafCategories();
 
+    @Query("SELECT c FROM Category c LEFT JOIN Product p ON p.category = c" +
+            " WHERE p.productId IS NULL")
+    List<Category> findCategoriesWithoutProducts();
+
+
 }

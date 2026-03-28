@@ -1,5 +1,5 @@
 
-
+<head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></head>
 <mat-drawer-container class="container">
 
   <mat-drawer #drawer mode="side" opened class="sidenav">
@@ -209,25 +209,34 @@
    
        </div>
 
-             <!--MovmentInStock -->
-             <button mat-raised-button color="primary"
-             (click)="showMovmentInStockManagment = !showMovmentInStockManagment">
-             Movment In Stock Management
-                 </button>
-         
+        <!--MovmentInStock -->
+            <button mat-raised-button color="primary"
+            (click)="showMovmentInStockManagment = !showMovmentInStockManagment">
+            Movment In Stock Management
+                </button>
+        
                  <div *ngIf="showMovmentInStockManagment" class="submenu">
-         
-                 <button mat-button (click)="addMovmentInStock()">
-                 Add Movment In Stock
-                 </button>
-         
-                 <button mat-button (click)="allMovmentInStock()">
-                 All Movment In Stock
-                 </button>
-         
-             </div>
+        
+            <button mat-button (click)="addMovmentInStock()">
+              Add Movment In Stock
+              </button>
+        
+            <button mat-button (click)="allMovmentInStock()">
+              All Movment In Stock
+              </button>
+            </div>
   </mat-drawer>
 
+<div class="cog-square">
+  <i class="fa-solid fa-gear" (click)="seeButtons()"></i>
+</div>
+
+
+<div *ngIf="showMenu" class="floating-menu">
+  <button mat-button (click)="changePassword()">Change Password</button>
+  <button mat-button (click)="logout()">Logout</button>
+</div>
+ 
 
   <!-- CONTENT -->
   <div class="content">

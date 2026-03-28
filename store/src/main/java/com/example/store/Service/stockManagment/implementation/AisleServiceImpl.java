@@ -1,13 +1,12 @@
 package com.example.store.Service.stockManagment.implementation;
 
 import com.example.store.DTO.stockManagment.AisleDTO;
+import com.example.store.Exception.ElementAlreadyExistException;
+import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.StockMangement.Aisle;
 import com.example.store.Model.StockMangement.Product;
-import com.example.store.Model.StockMangement.ProductVariant;
-import com.example.store.Model.StockMangement.Shelf;
 import com.example.store.Repository.StockManagment.AisleRepository;
 import com.example.store.Repository.StockManagment.ProductRepository;
-import com.example.store.Repository.StockManagment.ProductVariantRepository;
 import com.example.store.Service.stockManagment.interfaces.AisleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,10 +29,18 @@ public class AisleServiceImpl implements AisleService {
 
 
     private void mapDTOToAisle(AisleDTO aisleDTO, Aisle aisle) {
-        aisle.setName(aisleDTO.getName());
+        String changeToLower = aisleDTO.getName().trim().toUpperCase();
+        aisle.setName(changeToLower);
     }
+
+
     @Override
     public Aisle saveAisle(AisleDTO aisleDTO) {
+
+        String newName = aisleDTO.getName().trim().toLowerCase();
+        if(aisleRepository.findByName(newName).isPresent()){
+            throw new ElementAlreadyExistException("The aisle",aisleDTO.getName());
+        }
         Aisle aisle = new Aisle();
         mapDTOToAisle(aisleDTO, aisle);
         return aisleRepository.save(aisle);
@@ -53,6 +60,10 @@ public class AisleServiceImpl implements AisleService {
     @Override
     public Aisle updateAisle(AisleDTO aisleDTO, Long aisleId) {
             Aisle aisle = findAisleById(aisleId);
+        String newName = aisleDTO.getName().trim().toLowerCase();
+        if(aisleRepository.findByName(newName).isPresent()){
+            throw new ElementAlreadyExistException("The aisle ",aisleDTO.getName());
+        }
         mapDTOToAisle(aisleDTO,aisle);
         return aisleRepository.save(aisle);
     }

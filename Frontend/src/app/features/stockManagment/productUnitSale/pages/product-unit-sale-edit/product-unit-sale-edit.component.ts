@@ -48,7 +48,7 @@ productUnitSaleForm = this.formBuilder.group({
   productId : ['',Validators.required],
   unitPrice :['',Validators.required],
   conversionFactor:['',Validators.required],
-  unitId :['',Validators.required]
+  unitId :[null as number | null, Validators.required]
 
 })
 ngOnInit(): void {
@@ -62,7 +62,7 @@ ngOnInit(): void {
           productId: productUnitSale.product.description,
           unitPrice:String(productUnitSale.unitPrice),
           conversionFactor:String(productUnitSale.conversionFactor),
-          unitId:productUnitSale.unit.symbol,
+          unitId:productUnitSale.unit.unitId,
         });
       }, error:(err)=>{
         console.log("Error loading product",err);

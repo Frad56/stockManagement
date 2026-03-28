@@ -21,8 +21,6 @@ public class UnitServiceImpl implements UnitService {
 
     private void mapUnitDTOToUnit(UnitDTO unitDTO, Unit unit) {
         unit.setName(unitDTO.getName());
-        unit.setSymbol(unitDTO.getSymbol());
-        unit.setSizeType(unitDTO.getSizeType());
     }
 
     @Override

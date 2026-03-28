@@ -2,6 +2,7 @@ package com.example.store.Service.stockManagment.implementation;
 
 
 import com.example.store.DTO.stockManagment.ProductDTO;
+import com.example.store.Exception.ElementAlreadyExistException;
 import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.StockMangement.Aisle;
 import com.example.store.Model.StockMangement.Category;
@@ -50,9 +51,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product saveProduct(ProductDTO dto){
+    public Product saveProduct(ProductDTO productDTO){
+        String newProductReference = productDTO.getReference().trim().toLowerCase();
+        if(productRepository.findByReference(newProductReference).isPresent()){
+            throw new ElementAlreadyExistException("the Product Reference ",productDTO.getReference());
+
+        }
         Product product = new Product();
-        mapDTOToProduct(dto,product);
+        mapDTOToProduct(productDTO,product);
         return productRepository.save(product);
     }
 
@@ -75,6 +81,11 @@ public class ProductServiceImpl implements ProductService {
    @Override
     public Product updateProduct(ProductDTO product, Long productId){
         Product productDB = findProductById(productId);
+       String newProductReference = productDB.getReference().trim().toLowerCase();
+       if(productRepository.findByReference(newProductReference).isPresent()){
+           throw new ElementAlreadyExistException("the Product Reference ",product.getReference());
+
+       }
         mapDTOToProduct(product,productDB);
 
         return productRepository.save(productDB);

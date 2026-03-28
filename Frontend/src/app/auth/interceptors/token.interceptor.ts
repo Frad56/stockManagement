@@ -23,8 +23,9 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 
         if(error.status === 401){
           
-          const msg = error.error?.message || error.error;
-          if (msg === 'Token expired') {
+          const msg = error.error?.message ;
+          if ( msg == "TOKEN_EXPIRED") {
+          
             localStorage.removeItem('token');
             localStorage.removeItem('role');
             router.navigate(['/login']);

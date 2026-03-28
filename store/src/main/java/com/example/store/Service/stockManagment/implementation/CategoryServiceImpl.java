@@ -110,26 +110,31 @@ public class CategoryServiceImpl implements CategoryService {
         return false;
     }
 
-    @Override
-    public Object convertValue(String value,CharacteristicTypeValue typeValue){
-        switch (typeValue){
-            case STRING :
-                return value;
-            case DECIMAL :
-                return Double.parseDouble(value);
-            case INTEGER:
-                return Integer.parseInt(value);
-            case BOOLEAN:
-                return Boolean.parseBoolean(value);
-            case DATE:
-                return LocalDate.parse(value);
-        }
-        return null;
-    }
+//    @Override
+//    public Object convertValue(String value,CharacteristicTypeValue typeValue){
+//        switch (typeValue){
+//            case STRING :
+//                return value;
+//            case DECIMAL :
+//                return Double.parseDouble(value);
+//            case INTEGER:
+//                return Integer.parseInt(value);
+//            case BOOLEAN:
+//                return Boolean.parseBoolean(value);
+//            case DATE:
+//                return LocalDate.parse(value);
+//        }
+//        return null;
+//    }
 
     @Override
     public List<Category> leafCategoryList(){
         return categoryRepository.findLeafCategories();
+    }
+
+    @Override
+    public List<Category> findCategoriesWithoutProducts(){
+        return  categoryRepository.findCategoriesWithoutProducts();
     }
 }
 

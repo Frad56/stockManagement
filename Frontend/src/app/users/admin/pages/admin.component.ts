@@ -4,14 +4,18 @@ import { CommonModule } from '@angular/common';
 
 import { Router } from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [MatSidenavModule, MatButtonModule,CommonModule],
+  imports: [MatSidenavModule, MatButtonModule,CommonModule,
+    ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
+
+
 export class AdminComponent {
   showStockManagment = false;
   showUserManagment =false;
@@ -25,8 +29,9 @@ export class AdminComponent {
   showProductVariantManagment =false;
   showCharacteristicValueManagment= false;
   showMovmentInStockManagment= false;
-  
-  private router = inject(Router);
+  showMenu = false;
+   router = inject(Router);
+
 
 
 //* ****************   SignUP    ************************** */
@@ -104,7 +109,6 @@ signUp(){
      }
      allUnits(){
       this.router.navigate(['unit/unit-list']);
-  
      }
     /////////////////////    ProductUnitsale  Managment                  ///////////////////////////////
     addProductUnitsale(){
@@ -150,9 +154,23 @@ signUp(){
       addMovmentInStock(){
         this.router.navigate(['movementInStock/add-movementInStock']);
     
-       }
-       allMovmentInStock(){
+      }
+      allMovmentInStock(){
         this.router.navigate(['movementInStock/movementInStock-list']);
     
-       }
+      }
+
+
+      seeButtons(){
+        this.showMenu = !this.showMenu;
+      }
+
+      changePassword(){
+
+      }
+      logout(){
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        this.router.navigate(['/login']);
+      }
 }
