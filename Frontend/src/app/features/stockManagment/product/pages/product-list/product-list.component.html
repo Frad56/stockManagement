@@ -143,9 +143,17 @@
               <button class="action-btn action-btn--unit" (click)="addProductUnitsale(product.productId)" matTooltip="Add Unit Sale">
                 Unit Sale
               </button>
-              <button class="action-btn action-btn--unit" (click)="addCharacteristic(product.productId)" matTooltip="Add Unit Sale">
-                Add Charcteristic
-              </button>
+              <!-- <button  
+                      [disabled]="!productConditions[product.productId]"
+                      class="action-btn action-btn--unit"
+                      (click)="addCharacteristicValue()">
+                      Add Characteristic Value
+                    </button>
+-->
+                   
+                <button class="action-btn action-btn--variant" (click)=" productVariantList(product.productId)" matTooltip="Add Variant">
+                  product Variant List
+                  </button>
               <button class="action-btn action-btn--variant" (click)="addProductVariant(product.productId)" matTooltip="Add Variant">
                 Variant
               </button>

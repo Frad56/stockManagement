@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface CharacteristicRepository extends JpaRepository<Characteristic, Long> {
 
-
+Optional<Characteristic> findByName(String name);
 }

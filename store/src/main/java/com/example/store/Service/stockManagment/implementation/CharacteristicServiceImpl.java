@@ -2,6 +2,7 @@ package com.example.store.Service.stockManagment.implementation;
 
 
 import com.example.store.DTO.stockManagment.CharacteristicDTO;
+import com.example.store.Exception.ElementAlreadyExistException;
 import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.StockMangement.Characteristic;
 import com.example.store.Repository.StockManagment.CharacteristicRepository;
@@ -25,12 +26,17 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
 
     private void mapDTOToCharacteristic(CharacteristicDTO characteristicDTO,Characteristic characteristic){
-        characteristic.setName(characteristicDTO.getName());
+        String characteristicName = characteristicDTO.getName().trim().toLowerCase();
+        characteristic.setName(characteristicName);
         characteristic.setType(characteristicDTO.getType());
     }
 
     @Override
     public Characteristic saveCharacteristic(CharacteristicDTO characteristicDTO){
+        String characteristicName = characteristicDTO.getName().trim().toLowerCase();
+        if(characteristicRepository.findByName(characteristicName).isPresent()){
+            throw new ElementAlreadyExistException("the Characteristic ",characteristicName);
+        }
         Characteristic characteristic = new Characteristic();
         mapDTOToCharacteristic(characteristicDTO,characteristic);
         return characteristicRepository.save(characteristic);

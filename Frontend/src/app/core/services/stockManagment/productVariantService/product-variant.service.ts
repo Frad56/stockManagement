@@ -32,4 +32,13 @@ export class ProductVariantService {
   deleteProductVariant(productVariantId:number):Observable<string>{
     return this.http.delete<string>(`${this.apiUrl}/delete/${productVariantId}`);
   }
+
+  hasProductVariants(productId:number):Observable<{ hasVariants: boolean }>{
+    return this.http.get<{ hasVariants: boolean }>(`${this.apiUrl}/${productId}/has-variants`);
+  }
+  //
+
+  findProductVariantbyProductId(productId:number):Observable<ProductVariant[]>{
+    return this.http.get<ProductVariant[]>(`${this.apiUrl}/products/${productId}/variants`);
+  }
 }

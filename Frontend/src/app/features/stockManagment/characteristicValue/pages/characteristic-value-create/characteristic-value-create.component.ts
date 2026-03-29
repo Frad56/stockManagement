@@ -14,7 +14,7 @@ import { ProductCharacteristic } from '../../../../../shared/models/StockManagme
 import { ProductVariant } from '../../../../../shared/models/StockManagment/ProductVariant.model';
 import { ProductVariantService } from '../../../../../core/services/stockManagment/productVariantService/product-variant.service';
 import { Location } from '@angular/common';
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
 @Component({
   selector: 'app-characteristic-value-create',
   standalone: true,
@@ -24,7 +24,8 @@ import { Location } from '@angular/common';
     MatInputModule,
     MatButtonModule,
     CommonModule,
-    MatCardModule],
+    MatCardModule,
+    MatCheckboxModule],
   templateUrl: './characteristic-value-create.component.html',
   styleUrl: './characteristic-value-create.component.css'
 })

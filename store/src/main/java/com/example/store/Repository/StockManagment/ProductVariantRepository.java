@@ -12,4 +12,9 @@ import java.util.Optional;
 @Repository
 public interface ProductVariantRepository extends JpaRepository<ProductVariant, Long> {
 
+    Optional<ProductVariant> findByCode(String code);
+
+    boolean existsByProduct_ProductId(Long productId);
+
+    List<ProductVariant> findByProduct_ProductId(Long productId);
 }

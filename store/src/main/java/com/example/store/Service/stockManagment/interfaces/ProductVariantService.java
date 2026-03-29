@@ -20,5 +20,10 @@ public interface ProductVariantService {
 
     void deleteProductVariantById(Long ProductVariantId);
 
+    boolean productHasVariants(Long productId);
+
+    List<ProductVariant> findByProduct_ProductId(Long productId);
+
+
 
 }

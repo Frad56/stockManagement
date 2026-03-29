@@ -17,4 +17,6 @@ public interface CharacteristicValueService {
     CharacteristicValue updateCharacteristicValue(CharacteristicValueDTO characteristicValueDTO,Long characteristicValueId);
 
     void deleteCharacteristicValueById(Long characteristicValueId);
+
+    List<CharacteristicValue>  saveAll(List<CharacteristicValueDTO> characteristicValues);
 }

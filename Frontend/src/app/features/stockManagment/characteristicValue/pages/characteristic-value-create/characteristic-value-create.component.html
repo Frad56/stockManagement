@@ -3,16 +3,22 @@
 <div class="form-container">
   <form [formGroup]="characteristicValueForm" (ngSubmit)="onSubmit()" class="product-supplier-form">
 
+  
    <!-- productCharacteristic  -->
     <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Product Reference</mat-label>
-        <mat-select formControlName="productCharacteristicId">
-          <mat-option *ngFor="let productCharacteristic of productCharacteristics$ | async"
-                    [value]="productCharacteristic.productCharacteristicId" >
-          {{ productCharacteristic.product.reference }}
-         <!--  Characteristic name {{productCharacteristic.characteristic.name }} -->  
-          </mat-option>
-        </mat-select>
+        <mat-label>Characteristic</mat-label>
+        <div formGroupName="productCharacteristicId">
+
+          <div *ngFor="let pc of productCharacteristics$ | async">
+            <mat-checkbox
+              [formControlName]="pc.characteristic.characteristicId">
+              
+              {{ pc.characteristic.name }}
+              
+            </mat-checkbox>
+          </div>
+        
+        </div>
       </mat-form-field>
 
     <!-- productVariant  -->
@@ -26,6 +32,7 @@
       </mat-select>
     </mat-form-field>
 
+    
      <!-- Value -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Value</mat-label>

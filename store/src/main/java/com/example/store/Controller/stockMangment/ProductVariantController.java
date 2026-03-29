@@ -42,4 +42,16 @@ public class ProductVariantController {
     public ResponseEntity<ProductVariant> updateProductVariant(@RequestBody ProductVariantDTO productVariantDTO, @PathVariable("id") Long productVariantId) {
         return ResponseEntity.ok(productVariantService.updateProductVariant(productVariantDTO, productVariantId));
     }
+
+    @GetMapping("/{productId}/has-variants")
+    public ResponseEntity<Map<String,Boolean>> hasProductVariants(@PathVariable("productId") Long productId) {
+        boolean hasVariants = productVariantService.productHasVariants(productId);
+        return ResponseEntity.ok(Map.of("hasVariants", hasVariants));
+    }
+
+    @GetMapping("/products/{productId}/variants")
+    public ResponseEntity<List<ProductVariant>> findByProduct_ProductId(@PathVariable("productId") Long productId) {
+        List<ProductVariant> productVariantList = productVariantService.findByProduct_ProductId(productId);
+        return ResponseEntity.ok(productVariantList);
+    }
 }

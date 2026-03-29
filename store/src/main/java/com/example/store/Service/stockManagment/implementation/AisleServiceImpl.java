@@ -60,10 +60,6 @@ public class AisleServiceImpl implements AisleService {
     @Override
     public Aisle updateAisle(AisleDTO aisleDTO, Long aisleId) {
             Aisle aisle = findAisleById(aisleId);
-        String newName = aisleDTO.getName().trim().toLowerCase();
-        if(aisleRepository.findByName(newName).isPresent()){
-            throw new ElementAlreadyExistException("The aisle ",aisleDTO.getName());
-        }
         mapDTOToAisle(aisleDTO,aisle);
         return aisleRepository.save(aisle);
     }

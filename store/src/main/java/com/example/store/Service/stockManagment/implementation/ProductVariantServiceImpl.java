@@ -2,6 +2,7 @@ package com.example.store.Service.stockManagment.implementation;
 
 
 import com.example.store.DTO.stockManagment.ProductVariantDTO;
+import com.example.store.Exception.ElementAlreadyExistException;
 import com.example.store.Exception.ElementNotFoundException;
 import com.example.store.Model.StockMangement.Aisle;
 import com.example.store.Model.StockMangement.Product;
@@ -41,6 +42,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
     @Override
     public ProductVariant saveProductVariant(ProductVariantDTO productVariantDTO) {
+        String newProductReference = productVariantDTO.getCode().trim().toLowerCase();
+        if(productVariantRepository.findByCode(newProductReference).isPresent()){
+            throw new ElementAlreadyExistException("the Product Code ",productVariantDTO.getCode());
+        }
         ProductVariant productVariant = new ProductVariant();
         mapDTOToVariant(productVariantDTO,productVariant);
 
@@ -79,6 +84,25 @@ public class ProductVariantServiceImpl implements ProductVariantService {
          productVariantRepository.deleteById(productVariantId);
 
     }
+
+    @Override
+    public boolean productHasVariants(Long productId){
+
+        boolean variants = productVariantRepository.existsByProduct_ProductId(productId);
+        if(!variants){
+            throw new ElementNotFoundException("No variants found for product id: " + productId );
+        }
+        return  variants;
+    }
+
+    @Override
+    public List<ProductVariant> findByProduct_ProductId(Long productId){
+        if(!productVariantRepository.existsByProduct_ProductId(productId)){
+            throw new ElementNotFoundException("No variants found for product id: " + productId );
+        }
+        return productVariantRepository.findByProduct_ProductId(productId);
+    }
+
 
 
 }

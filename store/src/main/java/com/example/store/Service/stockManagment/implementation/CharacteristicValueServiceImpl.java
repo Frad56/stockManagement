@@ -14,6 +14,7 @@ import com.example.store.Service.stockManagment.interfaces.ProductVariantService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -77,5 +78,17 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
        characteristicValueRepository.deleteById(characteristicValueId);
     }
 
+    @Override
+    public  List<CharacteristicValue>  saveAll(List<CharacteristicValueDTO> characteristicValues){
+
+        List<CharacteristicValue> savedList = new ArrayList<>();
+        for (CharacteristicValueDTO characteristicValueDTO:characteristicValues) {
+            CharacteristicValue cv = new CharacteristicValue();
+            mapDTOToCharacteristicValue(characteristicValueDTO,cv);
+            CharacteristicValue saved = characteristicValueRepository.save(cv);
+            savedList.add(saved);
+        }
+        return savedList;
+    }
 
 }

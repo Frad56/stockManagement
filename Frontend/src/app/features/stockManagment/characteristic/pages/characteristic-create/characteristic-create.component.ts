@@ -58,10 +58,10 @@ export class CharacteristicCreateComponent {
     this.characteristicService.addCharacteristic(characteristicDTO).subscribe({
       next:(response) =>{
         console.log("data:",characteristicDTO);
-        this.characteristicId = response.characteristicId;
-        console.log("Characteristic ID:", this.characteristicId);
-        const productCharacteristicDTO = this.mapFormToProductCharacteristic();
-        this.productCharacteristicService.addProductCharacteristic(productCharacteristicDTO).subscribe({
+        //this.characteristicId = response.characteristicId;
+        //console.log("Characteristic ID:", this.characteristicId);
+        //const productCharacteristicDTO = this.mapFormToProductCharacteristic();
+        /*this.characteristicService.addCharacteristic(productCharacteristicDTO).subscribe({
           next:(response)=>{
             console.log("********************")
             console.log("ProductCharacteristic added!")
@@ -71,22 +71,26 @@ export class CharacteristicCreateComponent {
           error:(err)=>{
             console.log('error createing ProductCharacteristic',err)
           }
-        });
+        }); */
         this.characteristicForm.reset();
       },
       error:(err)=>{
+        if (err.error?.message) {
+          alert(err.error.message);  
+        }
         console.log('error',err)
       }
     })
   }
-
-  private mapFormToProductCharacteristic(): ProductCharacteristicDTO {
+  
+ /* private mapFormToProductCharacteristic(): ProductCharacteristicDTO {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
     return {
       productId: this.productId,
       characteristicId: this.characteristicId,
     };
   }
+  */
  
 
 

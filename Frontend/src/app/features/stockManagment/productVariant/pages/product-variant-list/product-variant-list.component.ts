@@ -15,9 +15,9 @@ import { ProductVariantService } from '../../../../../core/services/stockManagme
   standalone: true,
   imports: [CommonModule
     ,MatTableModule,
-     MatCardModule,
-     MatIconModule,
-     MatButtonModule],
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule],
   templateUrl: './product-variant-list.component.html',
   styleUrl: './product-variant-list.component.css'
 })

@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { Location } from '@angular/common';
+import { ProductVariantService } from '../../../../../core/services/stockManagment/productVariantService/product-variant.service';
 
 
 @Component({
@@ -29,9 +30,12 @@ export class ProductListComponent implements OnInit {
   private productService  = inject(ProductService);
   private router = inject(Router);
   private location = inject(Location);
-  
+  private productVariantService = inject(ProductVariantService);
+  condition!: boolean;
+  productConditions: { [productId: number]: boolean } = {};
   loadProducts(){
     this.products$ = this.productService.getProducts();
+    
   }
   ngOnInit() {
     this.loadProducts();
@@ -62,14 +66,23 @@ export class ProductListComponent implements OnInit {
   }
   
   addProductVariant(id:number){
-    this.router.navigate(['productVariant/add-productVariant-with-productVariantId',id]);
+    this.router.navigate(['productVariant/add-productVariant-with-productId',id]);
   }
 
+
+  productVariantList(id:number){
+    this.router.navigate(['productVariant/productVariant-list-with-productId',id]);
+  }
+
+
+
+  addCharacteristicValue(){
+    this.router.navigate(['characteristicValue/add-characteristicValue']);
+  }
 
   addCharacteristic(id:number){
     this.router.navigate(['characteristic/add-characteristic-with-productId',id]);
-
   }
-  
- 
+
+
 }
