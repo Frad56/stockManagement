@@ -12,6 +12,7 @@ import { CharacteristicValueService } from '../../../../../core/services/stockMa
 import { CharacteristicService } from '../../../../../core/services/stockManagment/characteristicService/characteristic.service';
 import { ProductCharacteristic } from '../../../../../shared/models/StockManagment/ProductCharacteristic.model';
 import { ProductCharacteristicService } from '../../../../../core/services/stockManagment/productCharacteristicService/product-characteristic.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-variants-by-product',
@@ -36,20 +37,16 @@ export class ProductVariantsByProductComponent  implements OnInit{
   private Characteristic = inject(CharacteristicService);
   private productCharacteristics = inject(ProductCharacteristicService);
 
-  loadProductVariantsByProduct(productId:number){
-    this.productVariants$ = this.productVariantService.
-    findProductVariantbyProductId(productId);
-
-  }
-
-
-  ngOnInit(): void {
+  loadProductVariantsByProduct(){
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
     if(this.productId){
-      this.loadProductVariantsByProduct(this.productId);
-    }
-   // alert("Product Variants for Product ID: " + this.productId);
+      this.productVariants$ = this.productVariantService.
+      findProductVariantbyProductId(this.productId);
+    }    
+  }
 
+  ngOnInit(): void {
+  this.loadProductVariantsByProduct();
   }
 
   addProductVariant(){
@@ -60,18 +57,21 @@ export class ProductVariantsByProductComponent  implements OnInit{
   }
 
   deleteProductVariant(productVariantId:number){  
-    if(confirm("Are you sure you want to delete this product variant?")){
-      this.productVariantService.deleteProductVariant(productVariantId).subscribe({
-        next:()=>{
-          alert("Product variant deleted successfully.");
-          this.loadProductVariantsByProduct(this.productId);
-        },
-        error:(err)=>{
-          console.error("Error deleting product variant:", err);
-          alert("Failed to delete the product variant. Please try again.");
-        }
-      });
-    }
+    Swal.fire({
+      title: "Are you sure you want to delete this product ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.productVariantService.deleteProductVariant(productVariantId).subscribe(res => {
+          Swal.fire('Deleted!', 'The product has been deleted.', 'success');
+          this.loadProductVariantsByProduct();
+        });
+
+      }
+    }) 
   }
   goBack(){
     this.location.back();

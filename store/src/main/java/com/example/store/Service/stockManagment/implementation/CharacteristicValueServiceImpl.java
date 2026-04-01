@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -26,20 +28,29 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     private final CharacteristicValueRepository characteristicValueRepository;
     private final ProductCharacteristicService productCharacteristicService;
     private final ProductVariantService productVariantService;
+    private final CharacteristicRepository characteristicRepository;
     @Autowired
     public CharacteristicValueServiceImpl(CharacteristicValueRepository characteristicValueRepository,
                                           ProductCharacteristicService productCharacteristicService,
-                                          ProductVariantService productVariantService){
+                                          ProductVariantService productVariantService,
+                                          CharacteristicRepository characteristicRepository){
         this.characteristicValueRepository=characteristicValueRepository;
             this.productCharacteristicService=productCharacteristicService;
             this.productVariantService=productVariantService;
+            this.characteristicRepository=characteristicRepository;
     }
+
 
     private void mapDTOToCharacteristicValue(CharacteristicValueDTO characteristicValueDTO,
                                              CharacteristicValue characteristicValue){
 
+        Characteristic characteristic = characteristicRepository.findById(characteristicValueDTO.getCharacteristicId())
+                .orElseThrow(() -> new ElementNotFoundException(characteristicValueDTO.getCharacteristicId()));
+
         characteristicValue.setProductCharacteristic(productCharacteristicService.findProductCharacteristicById
-                (characteristicValueDTO.getProductCharacteristicId()));
+                (characteristic.getCharacteristicId()));
+
+
         characteristicValue.setProductVariant(productVariantService.findProductVariantById
                 (characteristicValueDTO.getProductVariantId()));
         characteristicValue.setValue(characteristicValueDTO.getValue());
@@ -91,4 +102,21 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
         return savedList;
     }
 
+    @Override
+    public Map<String, String> findCharacteristicValueByProductVariantId(Long productVariantId) {
+
+        productVariantService.findProductVariantById(productVariantId);
+
+        List<CharacteristicValue> characteristicValueList =
+                characteristicValueRepository.findByProductVariant_ProductVariantId(productVariantId);
+
+        return characteristicValueList.stream()
+                .collect(Collectors.toMap(
+                        cv -> cv.getProductCharacteristic().getCharacteristic().getName() ,
+                        cv ->  cv.getValue()
+                ));
+    }
+
 }
+
+

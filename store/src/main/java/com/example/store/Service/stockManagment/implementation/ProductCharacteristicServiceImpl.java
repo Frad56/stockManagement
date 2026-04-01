@@ -1,7 +1,9 @@
 package com.example.store.Service.stockManagment.implementation;
 
 
+import com.example.store.DTO.stockManagment.CharacteristicDTO;
 import com.example.store.DTO.stockManagment.ProductCharacteristicDTO;
+import com.example.store.Model.StockMangement.Characteristic;
 import com.example.store.Model.StockMangement.ProductCharacteristic;
 import com.example.store.Repository.StockManagment.ProductCharacteristicRepository;
 import com.example.store.Service.stockManagment.interfaces.CharacteristicService;
@@ -9,6 +11,7 @@ import com.example.store.Service.stockManagment.interfaces.ProductCharacteristic
 import com.example.store.Service.stockManagment.interfaces.ProductService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,7 +23,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
 
     public ProductCharacteristicServiceImpl(ProductCharacteristicRepository productCharacteristicRepository,
                                             ProductService productService
-                                , CharacteristicService characteristicService) {
+            , CharacteristicService characteristicService) {
         this.productCharacteristicRepository = productCharacteristicRepository;
         this.productService = productService;
         this.characteristicService = characteristicService;
@@ -30,6 +33,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
         productCharacteristic.setProduct(productService.findProductById(productCharacteristicDTO.getProductId()));
         productCharacteristic.setCharacteristic(characteristicService.findCharacteristicById(productCharacteristicDTO.getCharacteristicId()));
     }
+
     @Override
     public ProductCharacteristic saveProductCharacteristic(ProductCharacteristicDTO productCharacteristic) {
         ProductCharacteristic productCharacteristicDB = new ProductCharacteristic();
@@ -63,4 +67,26 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
         productCharacteristicRepository.deleteById(productCharacteristicId);
     }
 
+    @Override
+    public List<ProductCharacteristic> saveProductCharacteristicList(List<Long> characteristicList, Long productId) {
+        List<ProductCharacteristic> list = new ArrayList<>();
+        for (Long characteristicId : characteristicList) {
+
+            ProductCharacteristicDTO productCharacteristicDTO = new ProductCharacteristicDTO();
+            productCharacteristicDTO.setProductId(productId);
+            productCharacteristicDTO.setCharacteristicId(characteristicId);
+
+            ProductCharacteristic productCharacteristic =new ProductCharacteristic();
+            mapDTOToProductCharacteristic(productCharacteristicDTO,productCharacteristic);
+            saveProductCharacteristic(productCharacteristicDTO);
+            list.add(productCharacteristic);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ProductCharacteristic> findProductCharacteristicByProductId(Long productId) {
+        productService.findProductById(productId);
+        return productCharacteristicRepository.findByProduct_ProductId(productId);
+    }
 }

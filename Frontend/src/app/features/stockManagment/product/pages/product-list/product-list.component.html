@@ -1,4 +1,7 @@
 <div class="page-wrapper">
+  <div *ngIf="showMessage" class="custom-alert">
+    {{ message }}
+  </div>
   <div class="page-header">
     <div class="header-left">
       <div class="breadcrumb">
@@ -150,8 +153,8 @@
                       Add Characteristic Value
                     </button>
 -->
-                   
-                <button class="action-btn action-btn--variant" (click)=" productVariantList(product.productId)" matTooltip="Add Variant">
+
+                <button class="action-btn action-btn--variant" (click)=" hasVariants(product.productId)" matTooltip="Add Variant">
                   product Variant List
                   </button>
               <button class="action-btn action-btn--variant" (click)="addProductVariant(product.productId)" matTooltip="Add Variant">
@@ -174,7 +177,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="product-row"></tr>
 
       </table>
-
+    
       <!-- Empty state -->
       <div class="empty-state" *ngIf="(products$ | async)?.length === 0">
         <div class="empty-icon">

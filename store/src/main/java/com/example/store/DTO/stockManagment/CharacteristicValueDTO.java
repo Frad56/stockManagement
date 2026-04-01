@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class CharacteristicValueDTO {
 
-    private Long productCharacteristicId;
+    private Long characteristicId;
     private Long productVariantId;
     private String value;
 

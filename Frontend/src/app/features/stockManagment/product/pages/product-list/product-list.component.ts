@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { Location } from '@angular/common';
 import { ProductVariantService } from '../../../../../core/services/stockManagment/productVariantService/product-variant.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -32,7 +33,10 @@ export class ProductListComponent implements OnInit {
   private location = inject(Location);
   private productVariantService = inject(ProductVariantService);
   condition!: boolean;
-  productConditions: { [productId: number]: boolean } = {};
+  showMessage: boolean = false;
+  message: string = "";
+
+  //productConditions: { [productId: number]: boolean } = {};
   loadProducts(){
     this.products$ = this.productService.getProducts();
     
@@ -47,11 +51,21 @@ export class ProductListComponent implements OnInit {
 
 
   deleteProduct(id:number){
-    this.productService.deleteProduct(id).subscribe(res => {
-      alert("product Deleted !");
-      this.loadProducts();
-    });
-  
+    Swal.fire({
+      title: "Are you sure you want to delete this product ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.productService.deleteProduct(id).subscribe(res => {
+          Swal.fire('Deleted!', 'The product has been deleted.', 'success');
+          this.loadProducts();
+        });
+
+      }
+    })     
   }
   addProduct(){
     this.router.navigate(['/add-product']);
@@ -69,7 +83,27 @@ export class ProductListComponent implements OnInit {
     this.router.navigate(['productVariant/add-productVariant-with-productId',id]);
   }
 
-
+  hasVariants(productId: number) {
+    this.productVariantService.hasProductVariants(productId).subscribe({
+      next:(response) =>{
+        this.condition = response.hasVariants
+        if(this.condition){
+                 this.productVariantList(productId);
+       }else{
+        console.log("This product has no variants !");
+        this.showMessage = true;
+        this.message= "This product has no variants !";
+        setTimeout(() => {
+          this.showMessage = false;
+        }, 3000);
+       }
+      },
+      error:(err) =>{
+        alert("Error checking product variants"+ err.error?.message);
+        console.error('Error checking product variants', err);
+      }
+    }); 
+  }
   productVariantList(id:number){
     this.router.navigate(['productVariant/productVariant-list-with-productId',id]);
   }

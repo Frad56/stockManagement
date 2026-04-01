@@ -87,11 +87,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     public boolean productHasVariants(Long productId){
-
         boolean variants = productVariantRepository.existsByProduct_ProductId(productId);
-        if(!variants){
-            throw new ElementNotFoundException("No variants found for product id: " + productId );
-        }
         return  variants;
     }
 

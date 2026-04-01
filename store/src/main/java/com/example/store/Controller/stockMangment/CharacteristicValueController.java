@@ -52,4 +52,10 @@ public class CharacteristicValueController {
         return ResponseEntity.ok(characteristicValueService.saveAll(characteristicValues));
     }
 
+
+    @GetMapping("/allCharacteristicValuesByProductVariantId/{productVariantId}")
+    public ResponseEntity<Map<String, String> > findCharacteristicValueByProductVariantId(@PathVariable("productVariantId")  Long productVariantId) {
+        return ResponseEntity.ok(characteristicValueService.findCharacteristicValueByProductVariantId(productVariantId));
+    }
+
 }

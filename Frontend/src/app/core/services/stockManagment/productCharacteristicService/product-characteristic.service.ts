@@ -32,4 +32,13 @@ export class ProductCharacteristicService {
   deleteProductCharacteristic(productCharacteristicId:number):Observable<string>{
     return this.http.delete<string>(`${this.apiUrl}/delete/${productCharacteristicId}`);
   }
+ 
+  addListProductCharacteristic(characteristicIds : Number[],producId:number):Observable<ProductCharacteristic[]>{
+    return this.http.post<ProductCharacteristic[]>
+    (`${this.apiUrl}/addProductCharacteristicList/${producId}`,characteristicIds);
+  }
+
+  getProductCharacteristicsByProductId(productId:number):Observable<ProductCharacteristic[]>{
+    return this.http.get<ProductCharacteristic[]>(`${this.apiUrl}/allProductCharacteristicsByProductId/${productId}`);
+  }
 }

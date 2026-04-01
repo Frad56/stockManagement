@@ -2,6 +2,7 @@ package com.example.store.Controller.stockMangment;
 
 
 import com.example.store.DTO.stockManagment.ProductCharacteristicDTO;
+import com.example.store.Model.StockMangement.Characteristic;
 import com.example.store.Model.StockMangement.ProductCharacteristic;
 import com.example.store.Service.stockManagment.interfaces.ProductCharacteristicService;
 import org.springframework.http.ResponseEntity;
@@ -47,4 +48,13 @@ public class ProductCharacteristicController {
         return ResponseEntity.ok(Map.of("message","Deleted Successfully"));
     }
 
+    @PostMapping("/addProductCharacteristicList/{productId}")
+    public ResponseEntity<List<ProductCharacteristic>> saveAll( @RequestBody List<Long> characteristicList,@PathVariable("productId") Long productId) {
+        return ResponseEntity.ok(productCharacteristicService.saveProductCharacteristicList(characteristicList,productId));
+    }
+
+    @GetMapping("/allProductCharacteristicsByProductId/{productId}")
+    public ResponseEntity<List<ProductCharacteristic>> findProductCharacteristicByProductId(@PathVariable("productId") Long productId) {
+        return ResponseEntity.ok(productCharacteristicService.findProductCharacteristicByProductId(productId));
+    }
 }

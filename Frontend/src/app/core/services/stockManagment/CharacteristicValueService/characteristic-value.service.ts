@@ -34,4 +34,7 @@ export class CharacteristicValueService {
   }
 
 
+  findCharacteristicValueByProductVariantId(productVariantId:number):Observable<{characteristicName:String,characteristicValue:String}[]>{
+    return this.http.get<{characteristicName:String,characteristicValue:String}[]>(`${this.apiUrl}/allCharacteristicValuesByProductVariantId/${productVariantId}`);
+  }
 }

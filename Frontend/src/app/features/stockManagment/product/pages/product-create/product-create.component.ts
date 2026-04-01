@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import {ProductDTO} from '../../../../../shared/models/dto/stockManagmentDTO/product.dto';
 import { ProductService } from '../../../../../core/services/stockManagment/productService/product.service';
 import { inject } from '@angular/core';
@@ -18,6 +18,19 @@ import { Aisle } from '../../../../../shared/models/StockManagment/Aisle.model';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormStateService } from '../../../../../core/services/form-state.service';
+import {FormsModule} from '@angular/forms';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { CharacteristicService } from '../../../../../core/services/stockManagment/characteristicService/characteristic.service';
+import { Characteristic } from '../../../../../shared/models/StockManagment/Characteristic.model';
+import { Product } from '../../../../../shared/models/StockManagment/product.model';
+import { ProductCharacteristicService } from '../../../../../core/services/stockManagment/productCharacteristicService/product-characteristic.service';
+
+
+export interface CharacteristicItem {
+  id: number;
+  name: string;
+  completed:boolean;
+}
 
 @Component({
   selector: 'app-product-create',
@@ -29,22 +42,38 @@ import { FormStateService } from '../../../../../core/services/form-state.servic
             MatButtonModule,
             CommonModule,
             MatCardModule,
-          MatIcon],
+          MatIcon,MatCheckboxModule, FormsModule],
   templateUrl: './product-create.component.html',
   styleUrl: './product-create.component.css'
 })
+
 export class ProductCreateComponent implements OnInit{
 
+  
   private formStateService = inject(FormStateService);
   categorys!:Observable<Category[]>;
   aisles!:Observable<Aisle[]>;
+  characteristics!:Observable<Characteristic[]>;
   private productService  = inject(ProductService);
   private categoryService = inject(CategoryService);
   private location = inject(Location);
 
+  
+  private characteristicService = inject(CharacteristicService);
+
+  readonly characteristicsState = signal({
+    completed: false,
+    items: [] as CharacteristicItem[],
+  });
+
+
+
   private router = inject(Router);
   private aisleService = inject(AisleService);
   fromBuilder= inject(FormBuilder);
+
+  private productCharacteristicService =inject(ProductCharacteristicService);
+
   productForm = this.fromBuilder.group({
     reference : [''],
     designation:[''],
@@ -60,24 +89,82 @@ export class ProductCreateComponent implements OnInit{
     this.aisles =this.aisleService.getAisles();
     console.log( "###########")
     console.log( this.categorys)
-
     const savedData = this.formStateService.getProductForm();
-
     if(savedData){
+      console.log("***********");
+      console.log(savedData);
+      console.log("***********");
       this.productForm.patchValue(savedData);
     }
+
+    this.characteristics = this.characteristicService.getCharacteristic();
+
+    this.characteristics.subscribe(res => {
+      this.characteristicsState.set({
+        completed: false,
+        items: res.map(characteristic => ({
+          id: characteristic.characteristicId,
+          name: characteristic.name,
+          completed: false
+        }))
+      })
+    });
   }
+  readonly partiallyComplete = computed(() => {
+    const state = this.characteristicsState();
+    return state.items.some(i => i.completed) &&
+           !state.items.every(i => i.completed);
+  });
+
+  update(completed: boolean, index?: number) {
+    this.characteristicsState.update(state => {
+      if (index === undefined) {
+      
+        state.completed = completed;
+        state.items.forEach(i => i.completed = completed);
+      } else {
+    
+        state.items[index].completed = completed;
+        state.completed = state.items.every(i => i.completed);
+      }
+      return { ...state };
+    });
+  }
+  
+  
+ 
+
   private mapFormToProduct(): ProductDTO {
     return this.productForm.getRawValue() as unknown as ProductDTO;
   }
 
+
   onSubmit() {
     if(this.productForm.invalid) return;
     const productDTO = this.mapFormToProduct();
+    const selected = this.characteristicsState()
+    .items
+    .filter(i => i.completed)
+    .map(i => i.id);
+
     this.productService.addProduct(productDTO).subscribe({
       next: (response) => {
         console.log('Product Created successfully', response);
-        alert('Product Created successfully');
+        const productId = response.productId;
+        if(!productId){
+          alert('Product created but no ID returned');
+          return;
+        }
+        this.productCharacteristicService
+        .addListProductCharacteristic(selected, productId)
+        .subscribe({
+          next: (res) => {
+            console.log("Ajout réussi", res);
+          },
+          error: (err) => {
+            console.error("Erreur", err);
+          }
+        });        alert('Product Characteristic Created successfully');
         this.productForm.reset();
         this.formStateService.clearProductForm(); 
       },
@@ -93,9 +180,14 @@ export class ProductCreateComponent implements OnInit{
       }
       
     });
+
+  
   }
  
-//Categorys
+  AddCharacteristic(){
+    this.formStateService.setProductForm(this.productForm.value);
+    this.router.navigate(['characteristic/add-characteristic']);
+  }
 addCategory(){
   this.formStateService.setProductForm(this.productForm.value);
   this.router.navigate(['categorys/add-category']);

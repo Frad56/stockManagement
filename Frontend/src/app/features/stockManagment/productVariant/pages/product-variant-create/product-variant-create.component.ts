@@ -36,6 +36,7 @@ export class ProductVariantCreateComponent implements OnInit {
   protected products$!:Observable<Product[]>;
   private location = inject(Location);
 
+  
   id!:number;
   private route = inject(ActivatedRoute);
 

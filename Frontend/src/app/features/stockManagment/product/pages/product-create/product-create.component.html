@@ -86,6 +86,37 @@
               Add
             </button>
         </div>
+
+        <div class="characteristics-section">
+
+          <div class="">
+            <h3>Characteristics</h3>
+        
+            <mat-checkbox
+              class=""
+              [checked]="characteristicsState().completed"
+              [indeterminate]="partiallyComplete()"
+              (change)="update($event.checked)">
+              Select All
+            </mat-checkbox>
+          </div>
+        
+          <div class="characteristics-list">
+            <div class="characteristic-item"
+                 *ngFor="let item of characteristicsState().items; let i = index">
+        
+              <mat-checkbox
+                [checked]="item.completed"
+                (change)="update($event.checked, i)">
+                {{ item.name }}
+              </mat-checkbox>
+            </div>
+            <button mat-flat-button color="primary" (click)="AddCharacteristic()" class="btn-primary">
+              Add Characteristic
+            </button>
+          </div>
+        
+        </div>
       </div>
 
       <!-- ACTIONS -->
