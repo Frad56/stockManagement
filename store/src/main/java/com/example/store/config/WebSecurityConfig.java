@@ -60,7 +60,7 @@ public class WebSecurityConfig {
                                 org.springframework.security.config.http.SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(a ->
-                        a.requestMatchers("/api/v1/auth/**","/api/email/**","/api/characteristicValue/**","/api/characteristic/**","/api/productCharacteristic/**").permitAll()
+                        a.requestMatchers("/api/v1/auth/**","/api/email/**","/api/characteristicValue/**","/api/characteristic/**","/api/productCharacteristic/**","/api/v1/auth/**","/api/email/**","/api/v1/auth/admin/**").permitAll()
                                 //.requestMatchers().hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 );

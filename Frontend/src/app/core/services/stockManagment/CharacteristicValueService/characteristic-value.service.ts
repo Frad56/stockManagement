@@ -33,8 +33,13 @@ export class CharacteristicValueService {
     return this.http.delete<string>(`${this.apiUrl}/delete/${characteristicValueId}`);
   }
 
-
+  //save Values 
+  saveAllCharacteristicValue(characteristics : CharacteristicValueDTO[]):Observable<CharacteristicValue[]>{
+    return this.http.post<CharacteristicValue[]>(`${this.apiUrl}/save-all`,characteristics);
+  }
+/*
   findCharacteristicValueByProductVariantId(productVariantId:number):Observable<{characteristicName:String,characteristicValue:String}[]>{
     return this.http.get<{characteristicName:String,characteristicValue:String}[]>(`${this.apiUrl}/allCharacteristicValuesByProductVariantId/${productVariantId}`);
   }
+  */
 }

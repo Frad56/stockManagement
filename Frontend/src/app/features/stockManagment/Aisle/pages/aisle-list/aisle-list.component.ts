@@ -9,6 +9,7 @@ import { Aisle } from '../../../../../shared/models/StockManagment/Aisle.model';
 import { AisleService } from '../../../../../core/services/stockManagment/aisleService/aisle.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-aisle-list',
   standalone: true,
@@ -46,12 +47,32 @@ export class AisleListComponent implements OnInit {
     this.router.navigate(['aisle/edit-aisle',id]);
   }
 
+
   deleteAisle(id:number){
-    this.aisleService.deleteAisle(id).subscribe(res => {
-      alert("Aisle Deleted !");
-      this.loadAisle();
-    });
-   
+    Swal.fire({
+      title: "Are you sure you want to delete this Aisle ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.aisleService.deleteAisle(id).subscribe({ 
+          next:(response)=>{
+            Swal.fire('Deleted!', 'The aisle has been deleted.', 'success');
+            this.loadAisle();
+          },error:(error)=>{
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: error.error?.message || 'An error occurred while deleting!'
+            });
+          }
+        }
+        );
+
+      }
+    })     
   }
   
 }

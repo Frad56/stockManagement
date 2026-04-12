@@ -20,8 +20,8 @@ public class CharacteristicValue {
     private Long characteristicValueId;
 
     @ManyToOne
-    @JoinColumn(name = "product_characteristic_id",nullable = false)
-    private ProductCharacteristic productCharacteristic;
+    @JoinColumn(name = "characteristic_id",nullable = false)
+    private Characteristic characteristic;
 
     @ManyToOne
     @JoinColumn(name = "product_variant_id",nullable = false)

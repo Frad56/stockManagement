@@ -15,6 +15,8 @@ import { Observable } from 'rxjs';
 import { ProductVariant } from '../../../../../shared/models/StockManagment/ProductVariant.model';
 import { ActivatedRoute } from '@angular/router';
 import { CharacteristicValueDTO } from '../../../../../shared/models/dto/stockManagmentDTO/CharacteristicValue.dto';
+import { Characteristic } from '../../../../../shared/models/StockManagment/Characteristic.model';
+import { CharacteristicService } from '../../../../../core/services/stockManagment/characteristicService/characteristic.service';
 @Component({
   selector: 'app-characteristic-value-edit',
   standalone: true,
@@ -31,11 +33,11 @@ import { CharacteristicValueDTO } from '../../../../../shared/models/dto/stockMa
 export class CharacteristicValueEditComponent implements OnInit{
   private formBuilder = inject(FormBuilder);
   private characteristicValueService = inject(CharacteristicValueService);
-  private productCharacteristicService = inject(ProductCharacteristicService);
+  private characteristicService = inject(CharacteristicService);
   private productVariantService = inject(ProductVariantService);
   
   private location =inject(Location);
-  productCharacteristics$ !: Observable<ProductCharacteristic[]>;
+  characteristics$ !: Observable<Characteristic[]>;
   productVariants$ !: Observable<ProductVariant[]>;
   
   private route = inject(ActivatedRoute);
@@ -49,7 +51,7 @@ export class CharacteristicValueEditComponent implements OnInit{
   
   ngOnInit(): void {
       this.productVariants$ = this.productVariantService.getProductVariant();
-      this.productCharacteristics$ = this.productCharacteristicService.getProductCharacteristic();
+      this.characteristics$ = this.characteristicService.getCharacteristic();
       this.id = Number(this.route.snapshot.paramMap.get('id'));
       if(this.id){
         this.characteristicValueService.findCharacteristicValueById(this.id).subscribe({
@@ -58,7 +60,7 @@ export class CharacteristicValueEditComponent implements OnInit{
             console.log("characteristicValue:",characteristicValue);
           
             this.characteristicValueForm.patchValue({
-              productCharacteristicId:characteristicValue.productCharacteristic.productCharacteristicId,
+              productCharacteristicId:characteristicValue.characteristic.characteristicId,
               productVariantId:characteristicValue.productVariant.productVariantId,
               value: characteristicValue.value         
             });

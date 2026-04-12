@@ -4,13 +4,14 @@ package com.example.store.Service.stockManagment.implementation;
 import com.example.store.DTO.stockManagment.ProductVariantDTO;
 import com.example.store.Exception.ElementAlreadyExistException;
 import com.example.store.Exception.ElementNotFoundException;
+import com.example.store.Exception.ResourceInUseException;
 import com.example.store.Model.StockMangement.Aisle;
 import com.example.store.Model.StockMangement.Product;
+import com.example.store.Model.StockMangement.ProductUnitSale;
 import com.example.store.Model.StockMangement.ProductVariant;
+import com.example.store.Repository.StockManagment.CharacteristicValueRepository;
 import com.example.store.Repository.StockManagment.ProductVariantRepository;
-import com.example.store.Service.stockManagment.interfaces.AisleService;
-import com.example.store.Service.stockManagment.interfaces.ProductService;
-import com.example.store.Service.stockManagment.interfaces.ProductVariantService;
+import com.example.store.Service.stockManagment.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,17 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     private final ProductVariantRepository productVariantRepository;
     private final ProductService productService;
+    private final CharacteristicValueRepository characteristicValueRepository;
 
 
 
-    @Autowired
+
      public ProductVariantServiceImpl(ProductVariantRepository productVariantRepository,
-                                      ProductService productService){
+                                      ProductService productService,
+                                      CharacteristicValueRepository characteristicValueRepository){
          this.productVariantRepository = productVariantRepository;
          this.productService = productService;
+         this.characteristicValueRepository = characteristicValueRepository;
      }
 
 
@@ -81,14 +85,18 @@ public class ProductVariantServiceImpl implements ProductVariantService {
          if(!productVariantRepository.existsById(productVariantId)){
              throw new ElementNotFoundException(productVariantId);
          }
+         boolean productVariantInUse = characteristicValueRepository.existsByProductVariant_ProductVariantId(productVariantId);
+
+         if(productVariantInUse){
+             throw new ResourceInUseException("This Product Variant is already used and cannot be deleted");
+        }
          productVariantRepository.deleteById(productVariantId);
 
     }
 
     @Override
     public boolean productHasVariants(Long productId){
-        boolean variants = productVariantRepository.existsByProduct_ProductId(productId);
-        return  variants;
+        return  productVariantRepository.existsByProduct_ProductId(productId);
     }
 
     @Override

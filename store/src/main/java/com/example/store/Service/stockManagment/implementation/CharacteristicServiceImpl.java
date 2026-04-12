@@ -4,8 +4,10 @@ package com.example.store.Service.stockManagment.implementation;
 import com.example.store.DTO.stockManagment.CharacteristicDTO;
 import com.example.store.Exception.ElementAlreadyExistException;
 import com.example.store.Exception.ElementNotFoundException;
+import com.example.store.Exception.ResourceInUseException;
 import com.example.store.Model.StockMangement.Characteristic;
 import com.example.store.Repository.StockManagment.CharacteristicRepository;
+import com.example.store.Repository.StockManagment.CharacteristicValueRepository;
 import com.example.store.Service.stockManagment.interfaces.CharacteristicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,13 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
 
     private final CharacteristicRepository characteristicRepository;
+    private  final CharacteristicValueRepository characteristicValueRepository;
 
 
-    @Autowired
-    public CharacteristicServiceImpl(CharacteristicRepository characteristicRepository){
+    public CharacteristicServiceImpl(CharacteristicRepository characteristicRepository,
+                                     CharacteristicValueRepository characteristicValueRepository){
         this.characteristicRepository=characteristicRepository;
+        this.characteristicValueRepository=characteristicValueRepository;
     }
 
 
@@ -66,7 +70,11 @@ public class CharacteristicServiceImpl implements CharacteristicService {
         if(!characteristicRepository.existsById(characteristicId)){
             throw new ElementNotFoundException(characteristicId);
         }
+        boolean isCharacteristicUsed = characteristicValueRepository.existsByCharacteristic_CharacteristicId(characteristicId);
 
+    if(isCharacteristicUsed) {
+        throw new ResourceInUseException("This characteristic is already used and cannot be deleted");
+    }
         characteristicRepository.deleteById(characteristicId);
     }
 

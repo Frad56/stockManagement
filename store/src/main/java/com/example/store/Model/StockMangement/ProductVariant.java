@@ -35,7 +35,4 @@ public class ProductVariant {
     private Product product;
 
 
-
-
-
 }

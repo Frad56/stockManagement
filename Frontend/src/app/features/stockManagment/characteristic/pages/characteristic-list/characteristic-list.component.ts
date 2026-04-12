@@ -8,6 +8,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Characteristic } from '../../../../../shared/models/StockManagment/Characteristic.model';
 import { CharacteristicService } from '../../../../../core/services/stockManagment/characteristicService/characteristic.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-characteristic-list',
@@ -38,12 +39,31 @@ ngOnInit(): void {
   this.loadCharacteristics();
 }
 
- deleteCharacteristic(id:number){
-  this.characteristicService.deleteCharacteristic(id).subscribe(res => {
-    alert("characteristic Deleted !");
-    this.loadCharacteristics();
-  });
- 
+deleteCharacteristic(id:number){
+  Swal.fire({
+    title: "Are you sure you want to delete this Characteristicduct ?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+  }).then((result) => {
+    if(result.isConfirmed){
+      this.characteristicService.deleteCharacteristic(id).subscribe({
+        next:(response)=>{
+          Swal.fire('Deleted!', 'The Characteristic has been deleted.', 'success');
+          this.loadCharacteristics();
+        },
+        error:(error)=>{
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.error?.message || 'An error occurred while deleting!'
+          });
+        }
+      });
+      
+    }
+  })     
 }
 addCharacteristic(){
   this.router.navigate(['characteristic/add-characteristic']);

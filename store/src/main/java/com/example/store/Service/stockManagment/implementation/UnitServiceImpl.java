@@ -2,7 +2,9 @@ package com.example.store.Service.stockManagment.implementation;
 
 import com.example.store.DTO.stockManagment.UnitDTO;
 import com.example.store.Exception.ElementNotFoundException;
+import com.example.store.Exception.ResourceInUseException;
 import com.example.store.Model.StockMangement.Unit;
+import com.example.store.Repository.StockManagment.ProductUnitSaleRepository;
 import com.example.store.Repository.StockManagment.UnitRepository;
 import com.example.store.Service.stockManagment.interfaces.UnitService;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,11 @@ import java.util.List;
 public class UnitServiceImpl implements UnitService {
 
     private final UnitRepository unitRepository;
+    private final ProductUnitSaleRepository productUnitSaleRepository;
 
-    public UnitServiceImpl(UnitRepository unitRepository) {
+    public UnitServiceImpl(UnitRepository unitRepository, ProductUnitSaleRepository productUnitSaleRepository) {
         this.unitRepository = unitRepository;
+        this.productUnitSaleRepository = productUnitSaleRepository;
     }
 
     private void mapUnitDTOToUnit(UnitDTO unitDTO, Unit unit) {
@@ -48,6 +52,11 @@ public class UnitServiceImpl implements UnitService {
         if(!unitRepository.existsById(unitId)) {
             throw new ElementNotFoundException("Unit not found with id: " + unitId);
         }
+        boolean isUnitInUse = productUnitSaleRepository.existsByUnit_UnitId(unitId);
+        if(isUnitInUse) {
+            throw new ResourceInUseException("This Unit is already used and cannot be deleted");
+        }
+
         unitRepository.deleteById(unitId);
     }
 

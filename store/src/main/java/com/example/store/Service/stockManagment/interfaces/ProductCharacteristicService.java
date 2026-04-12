@@ -13,7 +13,11 @@ public interface ProductCharacteristicService {
     ProductCharacteristic findProductCharacteristicById(Long productCharacteristicId);
     List<ProductCharacteristic> fetchProductCharacteristicList();
     ProductCharacteristic updateProductCharacteristic(ProductCharacteristicDTO productCharacteristic,Long productCharacteristicId);
+
+    void deleteProductCharacteristicByProductId(Long productId);
     void deleteProductCharacteristicById(Long productCharacteristicId);
+
     List<ProductCharacteristic> saveProductCharacteristicList(List<Long> characteristicList, Long productId);
     List<ProductCharacteristic> findProductCharacteristicByProductId(Long productId);
+
 }

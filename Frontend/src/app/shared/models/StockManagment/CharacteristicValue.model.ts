@@ -1,10 +1,10 @@
-import { ProductCharacteristic } from "./ProductCharacteristic.model";
+import { Characteristic } from "./Characteristic.model";
 import { ProductVariant } from "./ProductVariant.model";
 
 export class CharacteristicValue{
 
     characteristicValueId!:number;
-    productCharacteristic!:ProductCharacteristic;
+    characteristic!:Characteristic;
     productVariant!:ProductVariant;
     value!:string; 
     

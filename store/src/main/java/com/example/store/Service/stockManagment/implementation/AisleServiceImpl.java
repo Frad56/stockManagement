@@ -20,7 +20,7 @@ public class AisleServiceImpl implements AisleService {
 
     private final AisleRepository aisleRepository;
     private final ProductRepository productRepository;
-    @Autowired
+
         public AisleServiceImpl(AisleRepository aisleRepository,
                                 ProductRepository productRepository){
             this.aisleRepository = aisleRepository;

@@ -1,8 +1,7 @@
 package com.example.store.Handler;
 
 
-import com.example.store.Exception.ElementAlreadyExistException;
-import com.example.store.Exception.ElementNotFoundException;
+import com.example.store.Exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,4 +28,42 @@ public class GlobalExceptionHandler {
         error.put("message",ex.getMessage());
         return new ResponseEntity<>(error,HttpStatus.CONFLICT);
     }
+
+
+    @ExceptionHandler(ResourceInUseException.class)
+    public ResponseEntity<?> handlerResourceInUseException(ResourceInUseException ex){
+
+        Map<String,Object> error = new HashMap<>();
+        error.put("message",ex.getMessage());
+        return new ResponseEntity<>(error,HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<?> handlerUnauthorizedException(UnauthorizedException ex){
+
+        Map<String,Object> error = new HashMap<>();
+        error.put("message",ex.getMessage());
+        return new ResponseEntity<>(error,HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(SendEmailException.class)
+    public ResponseEntity<?> handlerSendEmailException(SendEmailException ex){
+
+        Map<String,Object> error = new HashMap<>();
+        error.put("message",ex.getMessage());
+        return new ResponseEntity<>(error,HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ValidationCodeException.class)
+    public ResponseEntity<?> handlerValidationCodeException(ValidationCodeException ex){
+
+        Map<String,Object> error = new HashMap<>();
+        error.put("message",ex.getMessage());
+        return new ResponseEntity<>(error,HttpStatus.CONFLICT);
+    }
+
+
+
 }

@@ -24,6 +24,7 @@ import { CharacteristicService } from '../../../../../core/services/stockManagme
 import { Characteristic } from '../../../../../shared/models/StockManagment/Characteristic.model';
 import { Product } from '../../../../../shared/models/StockManagment/product.model';
 import { ProductCharacteristicService } from '../../../../../core/services/stockManagment/productCharacteristicService/product-characteristic.service';
+import Swal from 'sweetalert2';
 
 
 export interface CharacteristicItem {
@@ -113,7 +114,7 @@ export class ProductCreateComponent implements OnInit{
   readonly partiallyComplete = computed(() => {
     const state = this.characteristicsState();
     return state.items.some(i => i.completed) &&
-           !state.items.every(i => i.completed);
+          !state.items.every(i => i.completed);
   });
 
   update(completed: boolean, index?: number) {
@@ -159,20 +160,21 @@ export class ProductCreateComponent implements OnInit{
         .addListProductCharacteristic(selected, productId)
         .subscribe({
           next: (res) => {
-            console.log("Ajout réussi", res);
+            console.log("List ProductCharacteristic Created successfully", res);
           },
           error: (err) => {
             console.error("Erreur", err);
+            alert(err.error?.message);
           }
-        });        alert('Product Characteristic Created successfully');
+        });     
+        Swal.fire('Product Created successfully');   
         this.productForm.reset();
         this.formStateService.clearProductForm(); 
       },
       error: (err) => {
         console.error('Error creating product', err);
-      
         if (err.error?.message) {
-          alert(err.error.message);   // message Spring
+          alert(err.error.message);
         } else {
           alert('Erreur serveur lors création   product');
         }

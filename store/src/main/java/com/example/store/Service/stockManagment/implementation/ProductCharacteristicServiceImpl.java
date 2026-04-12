@@ -3,6 +3,7 @@ package com.example.store.Service.stockManagment.implementation;
 
 import com.example.store.DTO.stockManagment.CharacteristicDTO;
 import com.example.store.DTO.stockManagment.ProductCharacteristicDTO;
+import com.example.store.Exception.ElementAlreadyExistException;
 import com.example.store.Model.StockMangement.Characteristic;
 import com.example.store.Model.StockMangement.ProductCharacteristic;
 import com.example.store.Repository.StockManagment.ProductCharacteristicRepository;
@@ -11,6 +12,7 @@ import com.example.store.Service.stockManagment.interfaces.ProductCharacteristic
 import com.example.store.Service.stockManagment.interfaces.ProductService;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLNonTransientException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,16 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
 
     @Override
     public ProductCharacteristic saveProductCharacteristic(ProductCharacteristicDTO productCharacteristic) {
+        Long productId = productCharacteristic.getProductId();
+        Long characteristicId = productCharacteristic.getCharacteristicId();
+
+        List<ProductCharacteristic> existingList = productCharacteristicRepository.findByProduct_ProductId(productId);
+        for(ProductCharacteristic existing : existingList){
+            if(existing.getCharacteristic().getCharacteristicId().equals(characteristicId)){
+                Characteristic characteristic= characteristicService.findCharacteristicById(characteristicId);
+                throw new ElementAlreadyExistException( characteristic.getName()," already exists for productId: " + productId );
+            }
+        }
         ProductCharacteristic productCharacteristicDB = new ProductCharacteristic();
         mapDTOToProductCharacteristic(productCharacteristic, productCharacteristicDB);
         return productCharacteristicRepository.save(productCharacteristicDB);
@@ -59,6 +71,7 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
         return productCharacteristicRepository.save(existingProductCharacteristic);
     }
 
+    //SQLIntegrityConstraintViolationException
     @Override
     public void deleteProductCharacteristicById(Long productCharacteristicId) {
         if (!productCharacteristicRepository.existsById(productCharacteristicId)) {
@@ -67,6 +80,12 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
         productCharacteristicRepository.deleteById(productCharacteristicId);
     }
 
+
+    @Override
+    public void deleteProductCharacteristicByProductId(Long productId) {
+        productService.findProductById(productId);
+        productCharacteristicRepository.deleteByProduct_ProductId(productId);
+    }
     @Override
     public List<ProductCharacteristic> saveProductCharacteristicList(List<Long> characteristicList, Long productId) {
         List<ProductCharacteristic> list = new ArrayList<>();
@@ -89,4 +108,5 @@ public class ProductCharacteristicServiceImpl implements ProductCharacteristicSe
         productService.findProductById(productId);
         return productCharacteristicRepository.findByProduct_ProductId(productId);
     }
+
 }

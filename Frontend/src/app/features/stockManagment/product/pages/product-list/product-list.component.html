@@ -154,11 +154,15 @@
                     </button>
 -->
 
-                <button class="action-btn action-btn--variant" (click)=" hasVariants(product.productId)" matTooltip="Add Variant">
+                <button class="action-btn btn-list" (click)=" hasVariants(product.productId)" matTooltip="Add Variant">
                   product Variant List
                   </button>
-              <button class="action-btn action-btn--variant" (click)="addProductVariant(product.productId)" matTooltip="Add Variant">
+              <button class="action-btn btn-add-variant" (click)="addProductVariant(product.productId)" matTooltip="Add Variant">
                 Variant
+              </button>
+              
+              <button class="action-btn btn-unit-sale" (click)="addProductUnitSale(product.productId)" matTooltip="Add Variant">
+                add Product Unit Sale
               </button>
               <div class="icon-actions">
                 <button class="icon-btn icon-btn--edit" (click)="editProduct(product.productId)" matTooltip="Edit product">

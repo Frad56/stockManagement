@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginRequest } from '../auth/LoginRequest';
 import { LoginResponse } from '../auth/LoginResponse';
 import { SignupRequest } from '../auth/SignupRequest';
@@ -16,14 +16,36 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+
+  private codeSubject = new BehaviorSubject<string | null>(null);
+  code$ = this.codeSubject.asObservable();
+
+ 
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API}/signin`, data)
       .pipe(
         tap(response => {
           localStorage.setItem('token', response.token);
           localStorage.setItem('role', response.role);
+          this.codeSubject.next(response.isEmailChanged.toString());
+          alert("value :"+this.codeSubject.value)
+         // alert(this.getIsEmailChanged());
+          //this.code$ = this.codeSubject.asObservable(); 
+          //alert("value"+this.codeSubject.value)
+         // this.codeSubject.subscribe(val => {
+           // console.log('isEmailChanged:', val)
+           // alert('isEmailChanged: ' + val);
+          
+         // });
+          
+          
+      
         })
       );
+  }
+  
+  getIsEmailChanged(){
+   return this.codeSubject.value
   }
 
   signup(data: UserDTO): Observable<ApiResponse> {

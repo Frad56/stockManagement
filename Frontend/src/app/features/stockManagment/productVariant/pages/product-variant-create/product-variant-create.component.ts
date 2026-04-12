@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductVariantService } from '../../../../../core/services/stockManagment/productVariantService/product-variant.service';
 import { Observable } from 'rxjs';
 import { Product } from '../../../../../shared/models/StockManagment/product.model';
@@ -13,6 +13,11 @@ import { ProductService } from '../../../../../core/services/stockManagment/prod
 import { ProductVariantDTO } from '../../../../../shared/models/dto/stockManagmentDTO/ProductVariant.dto';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { ProductCharacteristicService } from '../../../../../core/services/stockManagment/productCharacteristicService/product-characteristic.service';
+import { ProductCharacteristic } from '../../../../../shared/models/StockManagment/ProductCharacteristic.model';
+import { MatTableModule } from '@angular/material/table';
+import { CharacteristicValue } from '../../../../../shared/models/StockManagment/CharacteristicValue.model';
+import { CharacteristicValueService } from '../../../../../core/services/stockManagment/CharacteristicValueService/characteristic-value.service';
 
 @Component({
   selector: 'app-product-variant-create',
@@ -23,65 +28,118 @@ import { ActivatedRoute } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     CommonModule,
-    MatCardModule],
+    MatCardModule,MatTableModule,
+  FormsModule],
   templateUrl: './product-variant-create.component.html',
   styleUrl: './product-variant-create.component.css'
 })
 export class ProductVariantCreateComponent implements OnInit {
 
-  private productVariantService = inject(ProductVariantService);
-  private productService = inject(ProductService);
-  private formBuilder = inject(FormBuilder);
-
-  protected products$!:Observable<Product[]>;
+  private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
   private location = inject(Location);
 
-  
-  id!:number;
-  private route = inject(ActivatedRoute);
+  private productService = inject(ProductService);
+  private productCharacteristicService = inject(ProductCharacteristicService);
+  private productVariantService = inject(ProductVariantService);
+  private characteristicValueService = inject(CharacteristicValueService);
 
-  productVariantForm= this.formBuilder.group({
-    code:[''],
-    specificPrice:[],
-    quantityInStock:[],
-    productId:[null as number | null, Validators.required],
-  })
+  product!: Product;
+  characteristics$!: Observable<ProductCharacteristic[]>;
+
+  displayedColumns: string[] = ['characteristic','value'];
+
+  productVariantForm = this.fb.group({
+    code: [''],
+    specificPrice: [],
+    quantityInStock: [],
+    productId: [null as number | null, Validators.required],
+    values: this.fb.array([])
+  });
+
+  get values(): FormArray {
+    return this.productVariantForm.get('values') as FormArray;
+  }
 
   ngOnInit(): void {
-      this.products$ =this.productService.getProducts();
-      this.id = Number(this.route.snapshot.paramMap.get('id'));
-      if(this.id){
-        this.productVariantForm.patchValue({
-          productId:this.id
-        });
-      }
-    }
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+
+    if (!id) return;
+
+
+    this.productService.findProductById(id).subscribe(p => {
+      this.product = p;
+
+      this.productVariantForm.patchValue({
+        productId: p.productId
+      });
+    });
+
+    this.characteristics$ = this.productCharacteristicService.getProductCharacteristicsByProductId(id);
+
+    this.characteristics$.subscribe(chars => {
+      this.values.clear();
+
+      chars.forEach(c => {
+        this.values.push(
+          this.fb.group({
+            characteristicId: [c.characteristic.characteristicId],
+            value: ['']
+          })
+        );
+      });
+    });
+  }
 
   private mapFormToProductVariant(): ProductVariantDTO {
-    return this.productVariantForm.getRawValue() as unknown as ProductVariantDTO;
+    return {
+      code: this.productVariantForm.value.code!,
+      specificPrice: this.productVariantForm.value.specificPrice!,
+      quantityInStock: this.productVariantForm.value.quantityInStock!,
+      productId: this.productVariantForm.value.productId!
+    }
   }
 
-  onSubmit(){
-    if(this.productVariantForm.invalid)return;
-    const productVariantDTO = this.mapFormToProductVariant();
-    this.productVariantService.addProductVariant(productVariantDTO).subscribe({
-      next:(response)=>{
-        alert('Product Variant Created successfully');
-        this.productVariantForm.reset();
-      },
-      error: (err) => {
-        console.error('Error creating product variant', err);
+  onSubmit() {
+    if (this.productVariantForm.invalid) return;
+
+    const variantDTO = this.mapFormToProductVariant();
+    const valuesForm = this.values.getRawValue();
+    this.productVariantService.addProductVariant(variantDTO).subscribe({
+      next: (createdVariant) => {
+
+
+        const valuesDTO = valuesForm.map(v => ({
+          characteristicId: v.characteristicId,
+          value: v.value,
+          productVariantId: createdVariant.productVariantId
+        }));
+
+        this.characteristicValueService.saveAllCharacteristicValue(valuesDTO).subscribe({
+          next: () => {
+            alert('saved successfully');
+            this.productVariantForm.reset({
+                  productId: this.product.productId
+                });
+
+            this.values.clear();
+          },
+          error:
       
-        if (err.error?.message) {
-          alert(err.error.message); 
-        } else {
-          alert('Erreur serveur lors création  ');
-        }
-        console.log("la response ",productVariantDTO);
+          err => console.error(err)
+          
+        });
+
+      },
+      error: err => {
+        console.error(err);
+        alert(err.error.message);
       }
-    })
+    });
   }
-  goBack(){
+
+  goBack() {
     this.location.back();
   }
+
 }

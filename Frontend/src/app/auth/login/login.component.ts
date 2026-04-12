@@ -39,11 +39,10 @@ export class LoginComponent {
   }
 
   login() {
-    if (this.userForm.invalid) return;
-
+    if (this.userForm.invalid) return;    
     this.authService.login(this.userForm.value).subscribe({
       next: (response: LoginResponse) => {
-
+        
         if (response.role === 'ADMIN') {
           this.router.navigate(['/AdminDashboard']);
         } else if (response.role === 'WORKER') {
@@ -54,8 +53,10 @@ export class LoginComponent {
 
       },
       error: () => {
-        this.errorMessage = 'Nom d’utilisateur ou mot de passe incorrect';
+        this.errorMessage = 'User name or password invalid';
       }
     });
   }
+
+  
 }

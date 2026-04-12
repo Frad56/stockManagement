@@ -28,6 +28,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
           
             localStorage.removeItem('token');
             localStorage.removeItem('role');
+          
             router.navigate(['/login']);
           } 
           else if (msg === 'Invalid token') {

@@ -12,6 +12,6 @@ public interface ProductUnitSaleService {
     ProductUnitSale   findProductUnitSaleById(Long productUnitSaleId);
     ProductUnitSale   updateProductUnitSale(ProductUnitSaleDTO productUnitSale,Long productUnitSaleId);
     void deleteProductUnitSaleById(Long productUnitSaleId);
-
     List<ProductUnitSale> fetchProductUnitSaleList();
+
 }

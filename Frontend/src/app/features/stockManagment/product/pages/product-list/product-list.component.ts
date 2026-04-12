@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
   selector: 'app-product-list',
   standalone: true,
   imports: [CommonModule
-           ,MatTableModule,
+            ,MatTableModule,
             MatCardModule,
             MatIconModule,
             MatButtonModule],
@@ -59,10 +59,19 @@ export class ProductListComponent implements OnInit {
       cancelButtonColor: '#d33',
     }).then((result) => {
       if(result.isConfirmed){
-        this.productService.deleteProduct(id).subscribe(res => {
-          Swal.fire('Deleted!', 'The product has been deleted.', 'success');
-          this.loadProducts();
-        });
+        this.productService.deleteProduct(id).subscribe({ 
+          next:(response)=>{
+            Swal.fire('Deleted!', 'The product has been deleted.', 'success');
+            this.loadProducts();
+          },error:(error)=>{
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: error.error?.message || 'An error occurred while deleting!'
+            });
+          }
+        }
+        );
 
       }
     })     
@@ -88,7 +97,7 @@ export class ProductListComponent implements OnInit {
       next:(response) =>{
         this.condition = response.hasVariants
         if(this.condition){
-                 this.productVariantList(productId);
+                this.productVariantList(productId);
        }else{
         console.log("This product has no variants !");
         this.showMessage = true;
@@ -116,6 +125,10 @@ export class ProductListComponent implements OnInit {
 
   addCharacteristic(id:number){
     this.router.navigate(['characteristic/add-characteristic-with-productId',id]);
+  }
+
+  addProductUnitSale(id:number){
+    this.router.navigate(['productUnitSale/add-productUnitSale-with-ProductId',id]);
   }
 
 

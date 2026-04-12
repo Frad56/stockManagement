@@ -16,22 +16,19 @@ import org.springframework.security.core.Authentication;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
-    private CustomUserDetailsService customUserDetailsService;
-    private UserService userService;
-    private PasswordEncoder passwordEncoder;
-    private JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
+
     public AuthController(AuthenticationManager authenticationManager
             ,CustomUserDetailsService customUserDetailsService,
                           PasswordEncoder passwordEncoder,
@@ -45,6 +42,7 @@ public class AuthController {
     }
 
 
+
     @PostMapping("/signin")
     public LoginResponse authenticateUser(@RequestBody LoginRequest user) {
         Authentication authentication = authenticationManager.authenticate(
@@ -53,11 +51,14 @@ public class AuthController {
                         user.getPassword()
                 )
         );
-        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-         String token =jwtUtil.generateToken(userDetails.getUsername());
-        User get_user = userService.findByUsername(user.getUsername());
-        Role user_Role = get_user.getRole();
-         return new LoginResponse(token,user_Role);
+            User get_user = userService.findByUsername(user.getUsername());
+
+            final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token =jwtUtil.generateToken(userDetails.getUsername());
+
+            Role user_Role = get_user.getRole();
+
+        return new LoginResponse(token,user_Role,get_user.isEmailChanged());
 
     }
 

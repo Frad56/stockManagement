@@ -2,7 +2,6 @@ package com.example.store.Service.AuthService;
 
 import com.example.store.DTO.authentification.UserDTO;
 import com.example.store.Exception.ElementNotFoundException;
-import com.example.store.Model.Authentification.Role;
 import com.example.store.Model.Authentification.User;
 import com.example.store.Repository.AuthRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +55,21 @@ public class UserService {
     public Boolean verifyUserExisting(String username){
         return userRepository.findByUsername(username).isPresent();
     }
+
+
+    public String findEmailByName(String name) {
+        return userRepository.findEmailByName(name).orElseThrow(()
+                -> new ElementNotFoundException("Email for user with name " + name + " not found"));
+    }
+
+
+
+//    public void markUserAsLoggedIn(User user){
+//        if(user.isFirstLogin()){
+//            user.setFirstLogin(false);
+//            userRepository.save(user);
+//        }
+//    }
 //
 //    public Boolean verifyCode(String code,String userCode){
 //        if(code == userCode){

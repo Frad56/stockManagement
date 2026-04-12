@@ -5,5 +5,7 @@ import { CategoryListComponent } from "./pages/category-list/category-list.compo
 export const CATEGORY_ROUTES:Routes = [
     
     { path:'category', component :CategoryListComponent},
-    {path:'add-category',component:CategoryCreateComponent}
+    {path:'add-category',component:CategoryCreateComponent},
+    {path:'edit-category/:id',component:CategoryCreateComponent}
+
 ];

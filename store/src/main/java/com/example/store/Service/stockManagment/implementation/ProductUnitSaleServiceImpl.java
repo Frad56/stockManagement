@@ -69,4 +69,6 @@ public class ProductUnitSaleServiceImpl implements ProductUnitSaleService {
     public List<ProductUnitSale> fetchProductUnitSaleList() {
         return productUnitSaleRepository.findAll();
     }
+
+
 }

@@ -1,6 +1,6 @@
 export interface CharacteristicValueDTO{
 
-productCharacteristicId:number;
+characteristicId:number;
 productVariantId:number;
 value:string;
 

@@ -53,7 +53,6 @@ ngOnInit(): void {
           name:characteristic.name,
           type:characteristic.type,
         
-          
         });
       },
       error:(err)=>{

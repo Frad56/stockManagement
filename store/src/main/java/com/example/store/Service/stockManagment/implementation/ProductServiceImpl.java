@@ -4,15 +4,19 @@ package com.example.store.Service.stockManagment.implementation;
 import com.example.store.DTO.stockManagment.ProductDTO;
 import com.example.store.Exception.ElementAlreadyExistException;
 import com.example.store.Exception.ElementNotFoundException;
+import com.example.store.Exception.ResourceInUseException;
 import com.example.store.Model.StockMangement.Aisle;
 import com.example.store.Model.StockMangement.Category;
 import com.example.store.Model.StockMangement.Product;
+import com.example.store.Repository.StockManagment.ProductCharacteristicRepository;
 import com.example.store.Repository.StockManagment.ProductRepository;
+import com.example.store.Repository.StockManagment.ProductUnitSaleRepository;
 import com.example.store.Service.stockManagment.interfaces.AisleService;
 import com.example.store.Service.stockManagment.interfaces.CategoryService;
 import com.example.store.Service.stockManagment.interfaces.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,16 +28,19 @@ public class ProductServiceImpl implements ProductService {
 
     private final CategoryService categoryService;
     private  final AisleService aisleService;
+    private final ProductUnitSaleRepository productUnitSaleRepository;
+    private final ProductCharacteristicRepository productCharacteristicRepository;
 
 
-
-    @Autowired
     public ProductServiceImpl(ProductRepository productRepository,CategoryService categoryService,
-                              AisleService aisleService){
+                              AisleService aisleService,
+                              ProductUnitSaleRepository productUnitSaleRepository,
+                              ProductCharacteristicRepository productCharacteristicRepository){
         this.productRepository=productRepository;
         this.categoryService=categoryService;
         this.aisleService=aisleService;
-
+        this.productUnitSaleRepository = productUnitSaleRepository;
+        this.productCharacteristicRepository = productCharacteristicRepository;
     }
 
     private void mapDTOToProduct(ProductDTO dto, Product product) {
@@ -70,10 +77,16 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    @Transactional
     public void deleteProductById(Long productId){
         if(!productRepository.existsById(productId)){
             throw new ElementNotFoundException(productId);
         }
+        boolean isProductInUnitSale = productUnitSaleRepository.existsByProduct_ProductId(productId);
+        if(isProductInUnitSale){
+            throw new ResourceInUseException("This Product is already used and cannot be deleted");
+        }
+        productCharacteristicRepository.deleteByProduct_ProductId(productId);
         productRepository.deleteById(productId);
     }
 

@@ -29,7 +29,7 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     private final ProductCharacteristicService productCharacteristicService;
     private final ProductVariantService productVariantService;
     private final CharacteristicRepository characteristicRepository;
-    @Autowired
+
     public CharacteristicValueServiceImpl(CharacteristicValueRepository characteristicValueRepository,
                                           ProductCharacteristicService productCharacteristicService,
                                           ProductVariantService productVariantService,
@@ -47,12 +47,12 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
         Characteristic characteristic = characteristicRepository.findById(characteristicValueDTO.getCharacteristicId())
                 .orElseThrow(() -> new ElementNotFoundException(characteristicValueDTO.getCharacteristicId()));
 
-        characteristicValue.setProductCharacteristic(productCharacteristicService.findProductCharacteristicById
-                (characteristic.getCharacteristicId()));
 
+        characteristicValue.setCharacteristic(characteristic);
 
         characteristicValue.setProductVariant(productVariantService.findProductVariantById
                 (characteristicValueDTO.getProductVariantId()));
+
         characteristicValue.setValue(characteristicValueDTO.getValue());
     }
 
@@ -102,20 +102,22 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
         return savedList;
     }
 
-    @Override
-    public Map<String, String> findCharacteristicValueByProductVariantId(Long productVariantId) {
 
-        productVariantService.findProductVariantById(productVariantId);
 
-        List<CharacteristicValue> characteristicValueList =
-                characteristicValueRepository.findByProductVariant_ProductVariantId(productVariantId);
-
-        return characteristicValueList.stream()
-                .collect(Collectors.toMap(
-                        cv -> cv.getProductCharacteristic().getCharacteristic().getName() ,
-                        cv ->  cv.getValue()
-                ));
-    }
+//    @Override
+//    public Map<String, String> findCharacteristicValueByProductVariantId(Long productVariantId) {
+//
+//        productVariantService.findProductVariantById(productVariantId);
+//
+//        List<CharacteristicValue> characteristicValueList =
+//                characteristicValueRepository.findByProductVariant_ProductVariantId(productVariantId);
+//
+//        return characteristicValueList.stream()
+//                .collect(Collectors.toMap(
+//                        cv -> cv.getProductCharacteristic().getCharacteristic().getName() ,
+//                        cv ->  cv.getValue()
+//                ));
+//    }
 
 }
 

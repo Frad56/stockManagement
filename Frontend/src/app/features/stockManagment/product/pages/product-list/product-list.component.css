@@ -519,6 +519,26 @@
     z-index: 9999;
     animation: slideIn 0.3s ease;
   }
+
+  /*btn style */
+  .btn-add-variant {
+    background: linear-gradient(135deg, #79cb9b, #5bd08c);
+  }
+  
+  .btn-add-variant:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+  }
+  
+
+  .btn-unit-sale {
+    background: linear-gradient(135deg, #9d71ae, #b279ca);
+  }
+  
+  .btn-unit-sale:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
+  }
   
   @keyframes slideIn {
     from {
@@ -529,4 +549,6 @@
       opacity: 1;
       transform: translateX(0);
     }
+
+    
   }

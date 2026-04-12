@@ -12,4 +12,8 @@ import java.util.Optional;
 public interface CharacteristicValueRepository extends JpaRepository<CharacteristicValue, Long> {
 
         List<CharacteristicValue> findByProductVariant_ProductVariantId(Long productVariantId);
+
+        boolean existsByProductVariant_ProductVariantId(Long productVariantId);
+
+        boolean existsByCharacteristic_CharacteristicId(Long characteristicId);
 }

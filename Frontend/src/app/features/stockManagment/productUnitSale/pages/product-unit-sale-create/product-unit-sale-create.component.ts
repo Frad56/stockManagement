@@ -36,6 +36,7 @@ private formBuilder = inject(FormBuilder);
 private productService = inject(ProductService);
 private unitService = inject(UnitService);
 
+product!: Product;
 private findProduct !:Observable<Product>;
 private route = inject(ActivatedRoute);
 
@@ -52,7 +53,18 @@ productUnitSaleForm = this.formBuilder.group({
 
 })
 ngOnInit() {
-  this.products = this.productService.getProducts();
+  const id = Number(this.route.snapshot.paramMap.get('id'));
+
+  
+  if (!id) return;
+
+  this.productService.findProductById(id).subscribe(p =>{
+    this.product =p;
+
+  this.productUnitSaleForm.patchValue({
+    productId:p.productId
+    });
+  });
   this.units = this.unitService.getUnits();
 
   this.id = Number(this.route.snapshot.paramMap.get('id'));

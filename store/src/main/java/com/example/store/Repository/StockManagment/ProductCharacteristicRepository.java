@@ -16,4 +16,5 @@ public interface ProductCharacteristicRepository  extends JpaRepository<ProductC
 
 
     List<ProductCharacteristic> findByProduct_ProductId(Long productId);
+    void deleteByProduct_ProductId(Long productId);
 }
